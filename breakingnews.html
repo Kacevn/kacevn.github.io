@@ -628,6 +628,13 @@
       font-weight: 800;
     }
 
+    .modal-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
     .modal-tag {
       font-size: 11px;
       padding: 4px 9px;
@@ -637,6 +644,7 @@
       text-transform: uppercase;
       letter-spacing: 0.14em;
       color: var(--text-soft);
+      white-space: nowrap;
     }
 
     .modal-desc {
@@ -646,9 +654,6 @@
     }
 
     .modal-close {
-      position: absolute;
-      top: 10px;
-      right: 12px;
       background: rgba(5,9,30,0.96);
       border-radius: var(--radius-pill);
       border: 1px solid rgba(255,255,255,0.3);
@@ -659,6 +664,15 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
+      transition: background var(--trans-fast), color var(--trans-fast), border-color var(--trans-fast), transform var(--trans-fast);
+    }
+
+    .modal-close:hover {
+      background: rgba(12,18,60,0.96);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.64);
+      transform: translateY(-1px);
     }
 
     .form-grid {
@@ -675,6 +689,15 @@
     @media (max-width: 600px) {
       .form-grid {
         grid-template-columns: 1fr;
+      }
+      .modal-header-line {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .modal-header-right {
+        align-self: stretch;
+        justify-content: flex-start;
+        flex-wrap: wrap;
       }
     }
 
@@ -914,7 +937,7 @@
       width: 100%;
       height: auto;
       max-height: 420px;
-      object-fit: contain;   /* ảnh không bị cắt, fit trong khung */
+      object-fit: contain;
       display: block;
     }
 
@@ -1085,14 +1108,16 @@
   <!-- Modal gửi email -->
   <div class="modal-backdrop" id="email-modal">
     <div class="modal">
-      <button class="modal-close" id="email-close-btn" title="Đóng">
-        <span>✕</span>
-        <span>Đóng</span>
-      </button>
       <div class="modal-inner">
         <div class="modal-header-line">
           <div class="modal-title">Gửi email cho tòa soạn</div>
-          <div class="modal-tag">CONTACT • EDITOR</div>
+          <div class="modal-header-right">
+            <div class="modal-tag">CONTACT • EDITOR</div>
+            <button class="modal-close" id="email-close-btn" title="Đóng">
+              <span>✕</span>
+              <span>Đóng</span>
+            </button>
+          </div>
         </div>
         <div class="modal-desc">
           Điền thông tin bên dưới, sau đó hệ thống sẽ tự động mở Gmail ở tab mới với nội dung đã được soạn sẵn cho bạn kiểm tra.
@@ -1253,7 +1278,7 @@
   </div>
 
   <script>
-    /* ===== DỮ LIỆU BÀI VIẾT (giữ nguyên như bản trước) ===== */
+    /* ===== DỮ LIỆU BÀI VIẾT (đã rút gọn + thêm bài demo) ===== */
     const articles = [
       {
         title: "sybau gruop chặn đứng tin giả với nền tảng breaking news hoàn toàn mới",
@@ -1298,34 +1323,6 @@
         ]
       },
       {
-        title: "Đằng sau hiệu ứng mờ màn hình khi bạn bấm F12 trên sybau gruop",
-        category: "Behind the scenes",
-        date: "11/11/2025",
-        time: "19:00",
-        author: "Front-end Lab",
-        image: "https://images.pexels.com/photos/1591060/pexels-photo-1591060.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Một lớp overlay, chút animation và thông điệp vui: \"Soi code bố à con\" – đủ khiến mọi tay nhanh tay chậm phải bật cười.",
-        fullContent: [
-          "Hệ thống không nhằm mục tiêu ngăn 100% việc soi code – điều đó là bất khả thi trên web.",
-          "Thay vào đó, chúng tôi chọn một cách tiếp cận vui nhộn: cho bạn một thông điệp hài hước khi mở DevTools hoặc chuột phải.",
-          "Một chút cá tính giúp trang tin trở nên đáng nhớ hơn trong mắt độc giả kỹ thuật."
-        ]
-      },
-      {
-        title: "Email-first: vì sao tòa soạn vẫn thích bạn gửi mail hơn là chat?",
-        category: "Opinion",
-        date: "10/11/2025",
-        time: "15:22",
-        author: "Editorial Board",
-        image: "https://images.pexels.com/photos/261706/pexels-photo-261706.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Email vẫn là kênh quan trọng để xác minh nguồn tin, lưu trữ lịch sử trao đổi và làm việc chuyên nghiệp với cộng tác viên.",
-        fullContent: [
-          "Email cho phép lưu trữ lâu dài, tìm kiếm lại và forward dễ dàng cho các bộ phận liên quan.",
-          "Khi xử lý nguồn tin, việc có lịch sử thư từ rõ ràng giúp tòa soạn đảm bảo tính minh bạch và bảo vệ nguồn.",
-          "Vì vậy, nút gửi email trên sybau gruop được thiết kế cực nhanh: click một phát, Gmail mở sẵn, chỉ việc bấm Gửi."
-        ]
-      },
-      {
         title: "Thiết kế giao diện: làm sao để trang tin vừa đẹp vừa dễ đọc?",
         category: "Design",
         date: "09/11/2025",
@@ -1337,20 +1334,6 @@
           "Thiết kế tốt là thiết kế khiến người đọc quên mất rằng mình đang nhìn vào giao diện.",
           "Trang tin cần phân cấp tiêu đề – đoạn – meta rõ ràng, khoảng cách hợp lý để mắt không bị mệt.",
           "Dark mode không chỉ là phong trào, nó thực sự giúp trải nghiệm đọc tốt hơn trong môi trường ánh sáng yếu."
-        ]
-      },
-      {
-        title: "Nhạc nền và trải nghiệm đọc báo: nên hay không?",
-        category: "Lifestyle",
-        date: "08/11/2025",
-        time: "20:10",
-        author: "SyBau Studio",
-        image: "https://images.pexels.com/photos/373945/pexels-photo-373945.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Một chút lo-fi, một chút jazz – nếu được kiểm soát hợp lý, nhạc nền có thể khiến việc đọc tin trở nên thư giãn hơn.",
-        fullContent: [
-          "Không phải ai cũng thích nhạc nền khi đọc báo, nên quan trọng là cho người dùng quyền bật/tắt.",
-          "Trên sybau gruop, bạn có thể dán bất kỳ link YouTube, SoundCloud, hoặc file audio và phát trong nền.",
-          "Âm lượng, chất lượng và lựa chọn bài hát thuộc về người đọc – trang chỉ cung cấp công cụ."
         ]
       },
       {
@@ -1368,67 +1351,75 @@
         ]
       },
       {
-        title: "sybau gruop thử nghiệm mô hình nội dung chỉ chỉnh trong code",
-        category: "Lab",
-        date: "06/11/2025",
-        time: "10:20",
-        author: "SyBau Lab",
-        image: "https://images.pexels.com/photos/1181243/pexels-photo-1181243.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Không database, không backend, mọi thứ được quản lý bằng một file HTML duy nhất."
-      },
-      {
-        title: "Khi developer trở thành editor-in-chief của tòa soạn",
-        category: "Story",
-        date: "05/11/2025",
-        time: "22:02",
-        author: "Dev Editor",
-        image: "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Quyết định cấu trúc nội dung, tốc độ tải, và trải nghiệm người dùng nằm ngay trong tay dev."
-      },
-      {
-        title: "Dark mode – lựa chọn mặc định cho trải nghiệm tin tức 2025",
-        category: "UX",
-        date: "04/11/2025",
-        time: "16:40",
-        author: "UX Studio",
-        image: "https://images.pexels.com/photos/374559/pexels-photo-374559.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Màn hình ít chói hơn, pin đỡ tốn hơn, và nội dung nổi bật hơn trong không gian tối."
-      },
-      {
         title: "Tự tay dựng trang breaking news đầu tiên của bạn",
         category: "Hướng dẫn",
         date: "03/11/2025",
         time: "09:00",
         author: "SyBau Team",
         image: "https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Chỉ cần một file HTML, một trình soạn thảo code và một chút sáng tạo."
+        excerpt: "Chỉ cần một file HTML, một trình soạn thảo code và một chút sáng tạo.",
+        fullContent: [
+          "Bắt đầu từ một file HTML đơn giản, bạn có thể tạo hero, danh sách bài và sidebar bằng CSS thuần.",
+          "Sau đó thêm một mảng JavaScript để quản lý nội dung bài viết – không cần database hay backend.",
+          "Khi muốn update tin, chỉ việc sửa code, lưu lại và deploy lên hosting tĩnh là xong."
+        ]
+      },
+
+      /* ===== CÁC BÀI DEMO ẢO – SAU NÀY BẠN CHỈ CẦN SỬA CODE ===== */
+
+      {
+        title: "Tiêu đề bài viết demo #1",
+        category: "Thời sự",
+        date: "01/01/2026",
+        time: "08:00",
+        author: "Demo Editor",
+        image: "https://images.pexels.com/photos/261949/pexels-photo-261949.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Đây là nội dung demo. Khi dùng thật, bạn chỉ cần sửa title, category, date, image và excerpt trong object này."
       },
       {
-        title: "Bảo vệ source: vì sao chúng tôi trêu bạn khi bấm F12?",
-        category: "Fun",
-        date: "02/11/2025",
-        time: "21:21",
-        author: "Security Team",
-        image: "https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Không phải để ngăn 100% việc soi code, mà để mang lại nụ cười nhỏ cho người tò mò."
+        title: "Tiêu đề bài viết demo #2",
+        category: "Giải trí",
+        date: "01/01/2026",
+        time: "09:30",
+        author: "Demo Editor",
+        image: "https://images.pexels.com/photos/799091/pexels-photo-799091.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Bài demo về mảng giải trí. Thay bằng tin showbiz, phim ảnh, âm nhạc… tuỳ bạn."
       },
       {
-        title: "Tối ưu phân trang: 8 bài một trang là điểm ngọt?",
-        category: "Performance",
-        date: "01/11/2025",
-        time: "14:14",
-        author: "Analytics Desk",
-        image: "https://images.pexels.com/photos/669622/pexels-photo-669622.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Không quá dài để người đọc mệt mỏi, cũng không quá ngắn để phải chuyển trang liên tục."
+        title: "Tiêu đề bài viết demo #3",
+        category: "Kinh tế",
+        date: "01/01/2026",
+        time: "11:15",
+        author: "Demo Editor",
+        image: "https://images.pexels.com/photos/210607/pexels-photo-210607.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Bài demo về kinh tế. Bạn có thể sửa thành tin chứng khoán, thị trường, kinh doanh, startup…"
       },
       {
-        title: "Xây dựng thương hiệu sybau gruop trong mắt độc giả số",
-        category: "Branding",
-        date: "31/10/2025",
-        time: "11:11",
-        author: "Brand Studio",
-        image: "https://images.pexels.com/photos/313782/pexels-photo-313782.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        excerpt: "Từ logo, palette màu đến giọng văn – mọi thứ đều góp phần tạo nên cá tính riêng."
+        title: "Tiêu đề bài viết demo #4",
+        category: "Thể thao",
+        date: "01/01/2026",
+        time: "15:45",
+        author: "Demo Editor",
+        image: "https://images.pexels.com/photos/399187/pexels-photo-399187.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Bài demo về thể thao. Chỉ cần đổi ảnh + vài dòng mô tả là thành tin bóng đá, eSports…"
+      },
+      {
+        title: "Tiêu đề bài viết demo #5",
+        category: "Thế giới",
+        date: "01/01/2026",
+        time: "18:20",
+        author: "Demo Editor",
+        image: "https://images.pexels.com/photos/1095601/pexels-photo-1095601.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Bài demo cho mục quốc tế. Bạn muốn viết thời sự thế giới, phân tích, bình luận… đều được."
+      },
+      {
+        title: "Tiêu đề bài viết demo #6",
+        category: "Đời sống",
+        date: "01/01/2026",
+        time: "20:00",
+        author: "Demo Editor",
+        image: "https://images.pexels.com/photos/3736520/pexels-photo-3736520.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Bài demo về đời sống, cộng đồng. Khi dùng thật chỉ cần sửa text, mọi layout vẫn giữ nguyên."
       }
     ];
 
