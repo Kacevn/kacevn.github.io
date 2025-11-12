@@ -210,7 +210,7 @@
       background:linear-gradient(180deg, var(--card), transparent); box-shadow:var(--shadow);
       transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
     }
-    .link-card:hover{ transform:translateY(-3px); box-shadow: var(--shadow), var(--glow) }
+    .link-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow), var(--glow) }
 
     .link-card .cover{aspect-ratio:16/9; width:100%; object-fit:cover; display:block;
       background:linear-gradient(90deg, #0001, #0002, #0001);
@@ -241,7 +241,7 @@
     @media (max-width:680px){.posts-grid{grid-template-columns:1fr}}
     .post{
       position:relative; border:1px solid var(--border); border-radius:16px; overflow:hidden; background:linear-gradient(180deg, var(--card), transparent);
-      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      transition: transform .25s.ease, box-shadow .25s ease, border-color .25s ease;
       will-change: transform;
     }
     .post:hover{ transform: translateY(-3px); box-shadow: var(--shadow), var(--glow)}
@@ -254,7 +254,29 @@
     .post .taglist{display:flex; gap:6px; flex-wrap:wrap}
     .post .excerpt{color:var(--muted); margin-top:6px}
     .tilt{transform-style:preserve-3d; perspective:900px}
-        /* ===== Donate / Ủng hộ ===== */
+
+    /* ===== Modal bài viết ===== */
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45); backdrop-filter: blur(6px); z-index:1000}
+    .modal.open{display:flex}
+    .modal-card{
+      width:min(900px, 100%); max-height:90dvh; overflow:auto; border-radius:16px; background:var(--bg-elev); border:1px solid var(--border); box-shadow: var(--shadow), var(--glow);
+      animation: pop .2s ease-out;
+    }
+    @keyframes pop { from{ transform: scale(.98); opacity:0 } to{ transform: scale(1); opacity:1 } }
+    .modal-header{display:flex; gap:12px; align-items:center; justify-content:space-between; padding:14px 16px; position:sticky; top:0; background:linear-gradient(180deg, color-mix(in oklab, var(--bg-elev) 85%, transparent), var(--bg-elev)); border-bottom:1px solid var(--border); z-index:1}
+    .modal-title{margin:0; font-size:1.1rem}
+    .modal-content{padding:16px}
+    .progress{position:absolute; left:0; right:0; top:0; height:3px; background:linear-gradient(90deg, var(--accent), #22d3ee); transform-origin:left; transform: scaleX(0)}
+    .modal-cover{aspect-ratio:16/9; width:100%; object-fit:cover; border-bottom:1px solid var(--border)}
+    .modal-actions{display:flex; gap:8px}
+    .close-btn{border:none; background:transparent; color:var(--text); cursor:pointer; padding:8px 10px; border-radius:10px}
+    .close-btn:hover{background:var(--card)}
+    .post-content{line-height:1.75}
+    .post-content h1,.post-content h2,.post-content h3{margin:1.2em 0 .6em}
+    .post-content p{margin:.8em 0}
+    .post-content code{padding:.15em .35em;border-radius:6px;background:var(--chip); color:var(--chip-text)}
+
+    /* ===== DONATE / ỦNG HỘ ===== */
     .donate-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
@@ -307,26 +329,6 @@
       font-size:.86rem;
       color:var(--muted);
     }
-    /* ===== Modal bài viết ===== */
-    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45); backdrop-filter: blur(6px); z-index:1000}
-    .modal.open{display:flex}
-    .modal-card{
-      width:min(900px, 100%); max-height:90dvh; overflow:auto; border-radius:16px; background:var(--bg-elev); border:1px solid var(--border); box-shadow: var(--shadow), var(--glow);
-      animation: pop .2s ease-out;
-    }
-    @keyframes pop { from{ transform: scale(.98); opacity:0 } to{ transform: scale(1); opacity:1 } }
-    .modal-header{display:flex; gap:12px; align-items:center; justify-content:space-between; padding:14px 16px; position:sticky; top:0; background:linear-gradient(180deg, color-mix(in oklab, var(--bg-elev) 85%, transparent), var(--bg-elev)); border-bottom:1px solid var(--border); z-index:1}
-    .modal-title{margin:0; font-size:1.1rem}
-    .modal-content{padding:16px}
-    .progress{position:absolute; left:0; right:0; top:0; height:3px; background:linear-gradient(90deg, var(--accent), #22d3ee); transform-origin:left; transform: scaleX(0)}
-    .modal-cover{aspect-ratio:16/9; width:100%; object-fit:cover; border-bottom:1px solid var(--border)}
-    .modal-actions{display:flex; gap:8px}
-    .close-btn{border:none; background:transparent; color:var(--text); cursor:pointer; padding:8px 10px; border-radius:10px}
-    .close-btn:hover{background:var(--card)}
-    .post-content{line-height:1.75}
-    .post-content h1,.post-content h2,.post-content h3{margin:1.2em 0 .6em}
-    .post-content p{margin:.8em 0}
-    .post-content code{padding:.15em .35em;border-radius:6px;background:var(--chip); color:var(--chip-text)}
 
     /* ===== Footer ===== */
     footer{margin:28px 0;color:var(--muted);font-size:.92rem;text-align:center}
@@ -575,7 +577,8 @@
         <div id="posts-grid" class="posts-grid stagger" data-reveal aria-live="polite"></div>
         <p id="posts-empty" class="note" style="display:none">Không tìm thấy bài phù hợp. Hãy thử từ khóa khác hoặc bỏ lọc tag.</p>
       </section>
-            <!-- ===== DONATE / ỦNG HỘ ===== -->
+
+      <!-- ===== DONATE / ỦNG HỘ ===== -->
       <section id="donate" class="section card" aria-labelledby="donate-heading" data-reveal>
         <h2 id="donate-heading">Ủng hộ tác giả</h2>
         <p>
@@ -588,14 +591,14 @@
           <article class="donate-box">
             <div class="donate-qr">
               <!-- TODO: thay bằng ảnh QR MB Bank của bạn -->
-              <img src="https://sf-static.upanhlaylink.com/view/image_20251112da68cdc75f17ed712c7513bfd1bfc7d5.jpg" alt="QR chuyển khoản MB Bank">
+              <img src="TODO_LINK_QR_MB_BANK.jpg" alt="QR chuyển khoản MB Bank">
             </div>
             <div>
               <div class="donate-info-title">MB Bank</div>
               <div class="donate-lines">
-                <div><span class="donate-label">Chủ TK:</span> <span id="mb-name" data-label="Tên chủ tài khoản MB">THANH NGUYEN</span></div>
-                <div><span class="donate-label">Số TK:</span> <span id="mb-account" data-label="Số tài khoản MB">0916882278</span></div>
-                <div><span class="donate-label">Nội dung:</span> <span id="mb-note" data-label="Nội dung MB">Buy me a coffee ☕</span></div>
+                <div><span class="donate-label">Chủ TK:</span> <span id="mb-name" data-label="Tên chủ tài khoản MB">TODO Tên của bạn</span></div>
+                <div><span class="donate-label">Số TK:</span> <span id="mb-account" data-label="Số tài khoản MB">0000000000000</span></div>
+                <div><span class="donate-label">Nội dung:</span> <span id="mb-note" data-label="Nội dung MB">Donate ủng hộ cà phê</span></div>
               </div>
               <div class="donate-actions">
                 <button class="btn" data-ripple onclick="copyDonate('mb-account')">Sao chép số TK</button>
@@ -608,14 +611,14 @@
           <article class="donate-box">
             <div class="donate-qr">
               <!-- TODO: thay bằng ảnh QR ZaloPay của bạn -->
-              <img src="https://sf-static.upanhlaylink.com/view/image_20251112da68cdc75f17ed712c7513bfd1bfc7d5.jpg" alt="QR chuyển khoản ZaloPay">
+              <img src="TODO_LINK_QR_ZALOPAY.jpg" alt="QR chuyển khoản ZaloPay">
             </div>
             <div>
-              <div class="donate-info-title">ZaloPay / BVBank - NH TMCP Bản Việt</div>
+              <div class="donate-info-title">ZaloPay / Ví điện tử</div>
               <div class="donate-lines">
-                <div><span class="donate-label">Tên:</span> <span id="zalo-name" data-label="Tên ZaloPay">DAM PHU THANH</span></div>
-                <div><span class="donate-label">SĐT / ID:</span> <span id="zalo-account" data-label="ZaloPay">99ZP25295M37356327</span></div>
-                <div><span class="donate-label">Nội dung:</span> <span id="zalo-note" data-label="Nội dung ZaloPay">Buy me a coffee ☕</span></div>
+                <div><span class="donate-label">Tên:</span> <span id="zalo-name" data-label="Tên ZaloPay">TODO Tên của bạn</span></div>
+                <div><span class="donate-label">SĐT / ID:</span> <span id="zalo-account" data-label="ZaloPay">0900 000 000</span></div>
+                <div><span class="donate-label">Nội dung:</span> <span id="zalo-note" data-label="Nội dung ZaloPay">Donate ủng hộ cà phê</span></div>
               </div>
               <div class="donate-actions">
                 <button class="btn" data-ripple onclick="copyDonate('zalo-account')">Sao chép SĐT / ID</button>
@@ -626,13 +629,9 @@
         </div>
 
         <p class="donate-small-note">
-          * 💸 +1 tín đồ ủng hộ KaceDev — cảm ơn bạn nhiều! <code>Support Kace</code>.
+          * Bạn có thể chỉnh lại tên, số tài khoản, nội dung và link QR trực tiếp trong file <code>index.html</code>.
         </p>
       </section>
-
-      <!-- ===== CONTACT ===== -->
-      <section id="contact" class="section card" aria-labelledby="contact-heading" data-reveal>
-        ...
 
       <!-- ===== CONTACT ===== -->
       <section id="contact" class="section card" aria-labelledby="contact-heading" data-reveal>
@@ -752,7 +751,7 @@
       document.querySelectorAll('[data-reveal]').forEach(el=> el.classList.add('revealed'));
     }
 
-    // ===== Copy Discord handle/ID =====
+    // ===== Toast =====
     function toast(msg){
       const el = document.createElement('div');
       el.textContent = msg;
@@ -765,6 +764,8 @@
       setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .4s'; }, 1400);
       setTimeout(()=>{ document.body.removeChild(el); }, 1900);
     }
+
+    // ===== Copy Discord handle/ID =====
     window.copyDiscord = function(){
       const handle = document.getElementById('discord-handle').textContent.trim();
       const id = document.getElementById('discord-user-id').textContent.trim();
@@ -776,15 +777,8 @@
         try{ document.execCommand('copy'); toast('Đã copy: ' + text); } finally { document.body.removeChild(t); }
       }
     };
-    
-    // ===== Toggle Discord widget =====
-    const widgetBtn = document.getElementById('toggle-widget');
-    const widget = document.getElementById('discord-widget');
-    widgetBtn.addEventListener('click', ()=>{
-      widget.classList.toggle('open');
-      widgetBtn.textContent = widget.classList.contains('open') ? 'Ẩn Widget server' : 'Hiện Widget server';
-    });
-        // ===== Copy thông tin Donate (TK, nội dung...) =====
+
+    // ===== Copy thông tin Donate (TK, nội dung...) =====
     window.copyDonate = function(id){
       const el = document.getElementById(id);
       if(!el) return;
@@ -801,7 +795,6 @@
           .then(()=> toast(`Đã copy ${label}: ${text}`))
           .catch(()=> toast('Không copy được, thử lại nhé!'));
       } else {
-        // fallback
         const t = document.createElement('textarea');
         t.value = text;
         document.body.appendChild(t);
@@ -814,6 +807,15 @@
         }
       }
     };
+
+    // ===== Toggle Discord widget =====
+    const widgetBtn = document.getElementById('toggle-widget');
+    const widget = document.getElementById('discord-widget');
+    widgetBtn.addEventListener('click', ()=>{
+      widget.classList.toggle('open');
+      widgetBtn.textContent = widget.classList.contains('open') ? 'Ẩn Widget server' : 'Hiện Widget server';
+    });
+
     // ===== Footer year =====
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -874,13 +876,10 @@
     // ==========================================================
 
     // === WEBSITES DATA === (Bạn điền link/mô tả/ảnh ở đây)
-    // Mỗi mục: { title, url, desc, cover? }
-    // - cover: URL ảnh bìa (tùy chọn); nếu không có, card sẽ hiển thị nền + chữ cái đầu.
-    // - Toàn bộ card click để mở tab mới.
     const WEBSITES = [
       {
-        title: 'KACE HUB — Share API Script',
-        url: 'https://kacevn.github.io/apisource.html
+        title: 'KACE HUBB — Share API Script',
+        url: 'https://kacehubb.x10.bz/',
         desc: 'Share API Script “siêu VIP” cho anh em developer: test nhanh, tích hợp gọn.',
         cover: 'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200'
       },
@@ -906,7 +905,6 @@
         a.setAttribute('aria-label', `Mở ${site.title} (${domain})`);
         a.title = site.url;
 
-        // cover hoặc fallback
         if(site.cover){
           const img = document.createElement('img');
           img.className = 'cover'; img.src = site.cover; img.alt = site.title;
@@ -921,18 +919,16 @@
           a.appendChild(ph);
         }
 
-        // body
         const body = document.createElement('div'); body.className = 'body';
         const h3 = document.createElement('h3'); h3.textContent = site.title; body.appendChild(h3);
         if(site.desc){
           const p = document.createElement('p'); p.className = 'desc'; p.textContent = site.desc; body.appendChild(p);
         }
 
-        // meta (favicon + domain)
         const meta = document.createElement('div'); meta.className = 'meta';
         const fav = document.createElement('img');
         fav.className = 'favicon';
-        fav.alt = ''; // decorative
+        fav.alt = '';
         fav.loading = 'lazy';
         fav.src = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
         fav.onerror = ()=>{ fav.style.display='none'; };
@@ -940,7 +936,6 @@
         meta.appendChild(fav); meta.appendChild(spanDomain);
         body.appendChild(meta);
 
-        // icon external
         const ext = document.createElement('div'); ext.className = 'ext';
         ext.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3ZM5 5h6v2H7v10h10v-4h2v6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6c0-.55.45-1 1-1Z"/></svg>';
         a.appendChild(ext);
@@ -949,8 +944,6 @@
         websitesGrid.appendChild(a);
       });
 
-      // gắn tilt cho card mới
-      const isTouch = matchMedia('(pointer: coarse)').matches;
       if(!isTouch){
         websitesGrid.querySelectorAll('.tilt').forEach(el=>{
           el.addEventListener('mousemove', (e)=>{
@@ -990,7 +983,7 @@
     function computeReadMins(html){
       const text = html.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
       const words = text ? text.split(' ').length : 0;
-      return Math.max(1, Math.round(words / 220)); // 220 wpm
+      return Math.max(1, Math.round(words / 220));
     }
 
     function applyFilters(){
@@ -1025,14 +1018,22 @@
       const all = document.createElement('button');
       all.className = 'chip'; all.textContent = 'Tất cả';
       all.setAttribute('aria-pressed', String(activeTag===null));
-      all.onclick = ()=>{ activeTag=null; renderTagChips(); applyFilters(); renderWebsites();
- };
+      all.onclick = ()=>{
+        activeTag=null;
+        renderTagChips();
+        applyFilters();
+        renderWebsites();
+      };
       tagChips.appendChild(all);
       tags.forEach(tag=>{
         const btn = document.createElement('button');
         btn.className = 'chip'; btn.textContent = '#' + tag;
         btn.setAttribute('aria-pressed', String(activeTag===tag));
-        btn.onclick = ()=>{ activeTag = (activeTag===tag ? null : tag); renderTagChips(); applyFilters(); };
+        btn.onclick = ()=>{
+          activeTag = (activeTag===tag ? null : tag);
+          renderTagChips();
+          applyFilters();
+        };
         tagChips.appendChild(btn);
       });
     }
@@ -1051,7 +1052,6 @@
         card.className = 'post tilt';
         card.setAttribute('data-id', p.id);
 
-        // cover
         if(p.cover){
           const img = document.createElement('img');
           img.className = 'cover'; img.src = p.cover; img.alt = p.title;
@@ -1084,7 +1084,6 @@
         postsGrid.appendChild(card);
       });
 
-      // re-attach tilt handlers for new cards
       if(!isTouch){
         postsGrid.querySelectorAll('.tilt').forEach(el=>{
           el.addEventListener('mousemove', (e)=>{
@@ -1103,7 +1102,7 @@
     // Initial render
     renderTagChips();
     applyFilters();
-    renderWebsites(); // <-- thêm để Websites hiển thị ngay khi tải trang
+    renderWebsites();
     searchInput.addEventListener('input', applyFilters);
     sortSelect.addEventListener('change', applyFilters);
     toggleDrafts.addEventListener('change', applyFilters);
@@ -1130,7 +1129,6 @@
       modal.classList.add('open');
       document.body.style.overflow='hidden';
 
-      // progress on scroll
       const scroller = modal.querySelector('.modal-card');
       const update = ()=>{
         const max = scroller.scrollHeight - scroller.clientHeight;
@@ -1140,7 +1138,6 @@
       scroller.addEventListener('scroll', update, {passive:true});
       update();
 
-      // deep link
       history.replaceState(null,'', `#post-${id}`);
       copyLinkBtn.onclick = ()=>{
         const url = location.href;
@@ -1151,14 +1148,12 @@
       modal.classList.remove('open');
       document.body.style.overflow='';
       modalProgress.style.transform = 'scaleX(0)';
-      // remove hash if it matches a post
       if(location.hash.startsWith('#post-')) history.replaceState(null,'', location.pathname + location.search);
     }
     modalClose.addEventListener('click', closePost);
     modal.addEventListener('click', (e)=> { if(e.target === modal) closePost(); });
     document.addEventListener('keydown', (e)=> { if(e.key==='Escape' && modal.classList.contains('open')) closePost(); });
 
-    // Open by hash (#post-id)
     if(location.hash.startsWith('#post-')){
       const id = location.hash.replace('#post-','');
       setTimeout(()=> openPost(id), 0);
@@ -1166,7 +1161,6 @@
 
     // ===== Anti DevTools & Right-click =====
     (function antiDevTools(){
-      // Bypass cho chủ web khi cần debug: thêm ?dev=1 vào URL
       const bypass = /[?&]dev=1(?:&|$)/.test(location.search);
       if (bypass) return;
 
@@ -1178,22 +1172,20 @@
         if (typeof toast === 'function') toast(m); else alert(m);
       };
 
-      // 1) Chặn chuột phải + cảnh báo
       window.addEventListener('contextmenu', (e)=>{
         e.preventDefault();
         notify(warnMsg);
       });
 
-      // 2) Chặn phím tắt mở DevTools / View source / Save / Print ...
       const blockKeys = (e)=>{
         const k = (e.key || '').toUpperCase();
         const ctrlOrMeta = e.ctrlKey || e.metaKey;
 
         const hit = (
-          k === 'F12' ||                                     // F12
-          (e.ctrlKey && e.shiftKey && ['I','C','J','K'].includes(k)) ||  // Ctrl+Shift+I/C/J/K
-          (e.metaKey && e.altKey && ['I','J','C'].includes(k)) ||        // ⌘+⌥+I/J/C
-          (ctrlOrMeta && ['U','S','P'].includes(k))                       // Ctrl/⌘+U/S/P
+          k === 'F12' ||
+          (e.ctrlKey && e.shiftKey && ['I','C','J','K'].includes(k)) ||
+          (e.metaKey && e.altKey && ['I','J','C'].includes(k)) ||
+          (ctrlOrMeta && ['U','S','P'].includes(k))
         );
         if (hit) {
           e.preventDefault();
@@ -1203,13 +1195,11 @@
           return false;
         }
       };
-      // Dùng capture để đón phím trước các handler khác
       document.addEventListener('keydown', blockKeys, true);
 
-      // 3) Heuristic phát hiện DevTools đang mở (không tuyệt đối)
       let opened = false;
       const checkDevtools = ()=>{
-        const THRESH = 160; // chênh lệch kích thước khung cửa sổ ~ panel devtools
+        const THRESH = 160;
         const w = window.outerWidth - window.innerWidth;
         const h = window.outerHeight - window.innerHeight;
         const isOpen = (w > THRESH) || (h > THRESH);
@@ -1226,6 +1216,3 @@
   </script>
 </body>
 </html>
-
-
-
