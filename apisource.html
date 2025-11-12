@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>KaceHub — API & Script Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#020617; --bg2:#0b1020;
+      --panel:#0f172a; --panel-2:#111827;
+      --text:#e5e7eb; --muted:#a1a1aa;
+      --line:rgba(148,163,184,.22);
+      --accent:#22c55e; --accent-2:#38bdf8;
+      --radius:18px;
+      --shadow:0 22px 50px rgba(2,6,23,.55);
+      --shadow-soft:0 16px 40px rgba(2,6,23,.35);
+      --chip:rgba(56,189,248,.12);
+      --badge:60px; /* <— đổi 60px để tăng/giảm size badge */
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{
+      background:radial-gradient(1200px 500px at 20% -10%,rgba(56,189,248,.12),transparent 60%),
+                 radial-gradient(900px 380px at 95% 0,rgba(34,197,94,.11),transparent 60%), var(--bg);
+      color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif
+    }
+    a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
+    button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+    .wrap{width:min(1180px,100%);margin:28px auto;padding:18px}
+
+    /* ===== HERO ===== */
+    .hero{
+      position:relative;
+      background:
+        linear-gradient(180deg, rgba(34,197,94,.08), transparent 40%),
+        linear-gradient(90deg, rgba(56,189,248,.12), transparent 55%),
+        linear-gradient(180deg, var(--panel), var(--panel-2));
+      border:1px solid var(--line); border-radius:26px; padding:26px 22px 18px;
+      box-shadow:var(--shadow); overflow:hidden;
+    }
+    .hero-row{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap}
+    .brand{display:flex;gap:14px;align-items:center;flex:1 1 320px}
+
+    /* === FIX badge KH không bị dẹp === */
+    .badge{
+      width:var(--badge);
+      height:var(--badge);
+      min-width:var(--badge);
+      flex:0 0 var(--badge);      /* không cho co lại trong flex */
+      aspect-ratio:1/1;           /* luôn vuông -> bo tròn thành hình tròn */
+      border-radius:50%;
+      background:radial-gradient(circle at 35% 20%, #22c55e, #16a34a 45%, #0f172a 90%);
+      border:1px solid rgba(34,197,94,.7);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 14px 35px rgba(34,197,94,.38)
+    }
+    .badge span{font-weight:800;letter-spacing:-.02em;line-height:1;color:#ecfdf5}
+
+    .title{font-size:clamp(22px, 2.3vw, 32px);font-weight:800;letter-spacing:-.02em;line-height:1.15}
+    .subtitle{color:var(--muted);margin-top:4px}
+
+    .hero-tools{display:flex;flex-direction:column;gap:12px;min-width:260px;flex:1 1 280px}
+    .search{position:relative;background:rgba(2,6,23,.35);border:1px solid var(--line);
+      border-radius:14px;padding:10px 12px 10px 42px;outline:none;width:100%;
+      transition:border .18s ease, box-shadow .18s ease}
+    .search:focus{border-color:rgba(56,189,248,.55);box-shadow:0 0 0 3px rgba(56,189,248,.18)}
+    .search-icon{position:absolute;left:12px;top:9px;font-size:18px;color:#9ca3af}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:7px 11px;border-radius:999px;border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      display:inline-flex;align-items:center;gap:8px;color:#cbd5e1;transition:all .18s ease}
+    .chip i{font-size:12px;opacity:.9}
+    .chip:hover{transform:translateY(-1px);box-shadow:var(--shadow-soft)}
+    .chip.active{background:linear-gradient(90deg, rgba(56,189,248,.18), rgba(34,197,94,.18));
+      border-color:rgba(56,189,248,.45);color:#e2e8f0}
+    .chip.clear{border-color:rgba(239,68,68,.35);color:#fecaca}
+
+    .hero-foot{margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .pulse{display:inline-flex;gap:8px;align-items:center;font-size:12px;color:#86efac;background:rgba(34,197,94,.12);
+      padding:5px 9px;border:1px solid rgba(34,197,94,.35);border-radius:999px}
+    .pulse i{color:#4ade80}
+
+    /* ===== CATEGORIES ===== */
+    .categories{display:flex;flex-wrap:wrap;gap:8px}
+    .cat{padding:8px 12px;border-radius:999px;border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); color:#cbd5e1;
+      display:inline-flex;align-items:center;gap:8px;transition:all .18s ease}
+    .cat:hover{transform:translateY(-1px)}
+    .cat.active{border-color:rgba(34,197,94,.45);
+      background:linear-gradient(90deg, rgba(34,197,94,.18), rgba(56,189,248,.14));color:#e5e7eb}
+
+    /* ===== GRID ===== */
+    .grid{display:grid;gap:16px;margin-top:18px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+
+    /* ===== CARD ===== */
+    .script-card{
+      position:relative;
+      background:linear-gradient(var(--panel), var(--panel)) padding-box,
+                 linear-gradient(135deg, rgba(56,189,248,.45), rgba(34,197,94,.45)) border-box;
+      border:1px solid transparent;border-radius:var(--radius);box-shadow:var(--shadow-soft);
+      overflow:hidden;display:flex;flex-direction:column;transition:transform .16s ease, box-shadow .16s ease
+    }
+    .script-card:hover{transform:translateY(-3px);box-shadow:0 22px 60px rgba(2,6,23,.55)}
+    .card-inner{padding:16px 16px 14px}
+    .card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .tag-list{display:flex;gap:6px;flex-wrap:wrap}
+    .tag{font-size:12px;padding:4px 8px;border-radius:999px;background:var(--chip);border:1px solid rgba(56,189,248,.25);color:#cfe9fb}
+    .card-title{font-weight:700;font-size:18px;letter-spacing:-.01em;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+    .card-desc{color:#cbd5e1;font-size:14.5px;line-height:1.5;margin-bottom:12px}
+    .meta{display:flex;align-items:center;gap:10px;color:#9aa4b2;font-size:13px;flex-wrap:wrap;margin-bottom:10px}
+    .meta .dot{width:5px;height:5px;border-radius:50%;background:#94a3b8;opacity:.5}
+
+    /* ===== CODE BLOCK (collapsed default) ===== */
+    .code{position:relative;background:#0b1220;border:1px solid rgba(148,163,184,.22);border-radius:14px;overflow:hidden}
+    .code-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid rgba(148,163,184,.18);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01))}
+    .code-label{font-size:12px;color:#cbd5e1;display:flex;align-items:center;gap:8px}
+    .code-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(2,6,23,.35);color:#d1e2ff;display:inline-flex;align-items:center;gap:8px;font-size:13px;transition:all .18s ease}
+    .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-soft)}
+    .btn.copy{border-color:rgba(56,189,248,.45)} .btn.dl{border-color:rgba(34,197,94,.45)}
+    .btn.link{border-color:rgba(180,180,200,.25);color:#e5e7eb} .btn.full{border-color:rgba(56,189,248,.5)}
+    pre{margin:0;padding:14px;overflow:auto;font-size:13.6px;line-height:1.55}
+    pre code{display:block;min-width:100%}
+    .code.collapsed pre{max-height:220px;overflow:hidden}
+    .code.collapsed::after{content:"";position:absolute;left:0;right:0;bottom:0;height:56px;background:linear-gradient(180deg, rgba(11,18,32,0), #0b1220 70%);pointer-events:none}
+
+    /* ===== CARD FOOT (fix tràn + gọn gàng) ===== */
+    .card-foot{
+      padding:12px 16px 16px;
+      display:flex;
+      align-items:center;
+      gap:8px 14px;
+      color:#a1a1aa;
+      font-size:13px;
+      flex-wrap:wrap;                 /* Cho phép xuống dòng khi hẹp */
+      justify-content:flex-start;     /* Tránh đẩy tràn 2 bên */
+    }
+    .card-foot > span{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      white-space:normal;
+      word-break:break-word;
+      overflow-wrap:anywhere;
+    }
+    @media (min-width:640px){
+      .card-foot{ justify-content:space-between; } /* Màn rộng thì canh 2 bên */
+    }
+
+    /* ===== MODAL FULL CODE ===== */
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:10000}
+    .modal.show{display:flex}
+    .modal-box{width:min(1000px,92vw);max-height:86vh;background:var(--panel-2);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(148,163,184,.18)}
+    .modal-title{font-weight:600}
+    .modal-actions{display:flex;gap:8px}
+    .modal-body{padding:12px;overflow:auto}
+    .modal-close{border-color:rgba(239,68,68,.45);color:#fecaca}
+
+    footer{margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg, var(--panel), var(--panel-2));color:#9aa4b2;text-align:center;font-size:14px}
+
+    :focus-visible{outline:3px solid rgba(56,189,248,.5);outline-offset:2px;border-radius:10px}
+
+    /* ===== DEV TOOLS SHIELD (F12 / Ctrl+U / Right Click) ===== */
+    .devshield-overlay{
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle at 20% 0, rgba(56,189,248,.22), transparent 55%),
+                 radial-gradient(circle at 80% 100%, rgba(34,197,94,.25), transparent 55%),
+                 rgba(15,23,42,.92);
+      backdrop-filter:blur(10px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:99999;
+      animation:devshield-fade-in .22s ease-out;
+    }
+    .devshield-overlay.show{display:flex;}
+
+    .devshield-box{
+      position:relative;
+      width:min(420px, 92vw);
+      padding:22px 18px 18px;
+      border-radius:24px;
+      background:linear-gradient(145deg, rgba(15,23,42,1), rgba(2,6,23,1));
+      border:1px solid rgba(56,189,248,.4);
+      box-shadow:0 24px 80px rgba(0,0,0,.75);
+      text-align:center;
+      overflow:hidden;
+      animation:devshield-pop .24s ease-out;
+    }
+    .devshield-ring{
+      position:absolute;
+      inset:-40%;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 30% 0, rgba(56,189,248,.2), transparent 55%),
+        radial-gradient(circle at 70% 100%, rgba(34,197,94,.2), transparent 55%);
+      opacity:.22;
+      filter:blur(12px);
+      animation:devshield-pulse 2.4s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .devshield-icon{
+      width:56px;
+      height:56px;
+      border-radius:18px;
+      margin:0 auto 10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:28px;
+      background:radial-gradient(circle at 30% 0, rgba(56,189,248,.5), rgba(15,23,42,1));
+      box-shadow:0 18px 40px rgba(56,189,248,.6);
+      transform:translateY(0);
+      animation:devshield-float 2s ease-in-out infinite;
+    }
+    .devshield-title{
+      font-weight:700;
+      font-size:18px;
+      letter-spacing:-.01em;
+      margin-bottom:6px;
+    }
+    .devshield-sub{
+      font-size:14px;
+      color:#cbd5e1;
+      margin-bottom:14px;
+    }
+    .devshield-sub span{
+      color:#f97316;
+      font-weight:600;
+    }
+    .devshield-btn{
+      margin-top:4px;
+      padding:8px 18px;
+      border-radius:999px;
+      border:1px solid rgba(34,197,94,.6);
+      background:linear-gradient(90deg, rgba(34,197,94,.9), rgba(56,189,248,.9));
+      color:#ecfdf5;
+      font-size:14px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 16px 40px rgba(22,163,74,.7);
+      transition:transform .14s ease, box-shadow .14s ease, filter .14s ease;
+    }
+    .devshield-btn i{
+      font-size:14px;
+    }
+    .devshield-btn:hover{
+      transform:translateY(-1px) scale(1.01);
+      box-shadow:0 20px 60px rgba(22,163,74,.85);
+      filter:brightness(1.05);
+    }
+
+    .devshield-tip{
+      margin-top:10px;
+      font-size:12px;
+      color:#9ca3af;
+      opacity:.9;
+    }
+
+    @keyframes devshield-fade-in{
+      from{opacity:0;}
+      to{opacity:1;}
+    }
+    @keyframes devshield-pop{
+      from{transform:scale(.86) translateY(10px);opacity:0;}
+      to{transform:scale(1) translateY(0);opacity:1;}
+    }
+    @keyframes devshield-float{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-5px);}
+    }
+    @keyframes devshield-pulse{
+      0%,100%{opacity:.18;transform:scale(1);}
+      50%{opacity:.4;transform:scale(1.03);}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- ===== HERO ===== -->
+    <header class="hero">
+      <div class="hero-row">
+        <div class="brand">
+          <div class="badge" aria-hidden="true"><span>KH</span></div>
+          <div>
+            <div class="title">KaceHub — API & Script Hub</div>
+            <div class="subtitle">Kho chia sẻ code nhanh gọn. Đăng bài bằng cách sửa HTML: copy 1 thẻ &lt;article&gt; rồi thay nội dung.</div>
+          </div>
+        </div>
+
+        <div class="hero-tools">
+          <div style="position:relative">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input id="search" class="search" placeholder="Tìm theo tiêu đề / mô tả / tag…" autocomplete="off" />
+          </div>
+          <div class="chips" id="chips">
+            <!-- Tag gợi ý (click để lọc). Bạn thêm/bớt tự do -->
+            <button class="chip" data-tag="api"><i class="fa-solid fa-tag"></i>#api</button>
+            <button class="chip" data-tag="script"><i class="fa-solid fa-tag"></i>#script</button>
+            <button class="chip" data-tag="auth"><i class="fa-solid fa-tag"></i>#auth</button>
+            <button class="chip" data-tag="nodejs"><i class="fa-brands fa-node-js"></i>#nodejs</button>
+            <button class="chip" data-tag="python"><i class="fa-brands fa-python"></i>#python</button>
+            <button class="chip" data-tag="curl"><i class="fa-solid fa-terminal"></i>#curl</button>
+            <button class="chip" data-tag="tut"><i class="fa-solid fa-graduation-cap"></i>#tut</button>
+            <button class="chip clear" id="clearChips"><i class="fa-solid fa-xmark"></i>Xoá tag</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-foot">
+        <span class="pulse"><i class="fa-solid fa-bolt"></i>Mẹo: Dùng <b>Copy</b> hoặc <b>Tải</b> để lấy code nhanh.</span>
+        <!-- DANH MỤC -->
+        <nav class="categories" id="categories" aria-label="Danh mục">
+          <button class="cat active" data-cat="all"><i class="fa-solid fa-layer-group"></i>Tất cả</button>
+          <button class="cat" data-cat="api"><i class="fa-solid fa-cloud"></i>API</button>
+          <button class="cat" data-cat="script"><i class="fa-solid fa-code"></i>Script</button>
+          <button class="cat" data-cat="tut"><i class="fa-solid fa-graduation-cap"></i>Tut</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ===== LIST ===== -->
+    <main class="grid" id="list">
+
+      <!-- 🔧 TEMPLATE: COPY KHỐI NÀY ĐỂ ĐĂNG BÀI MỚI
+        1) Đổi id="your-id" (không dấu, không cách) + data-cat="api|script|tut"
+        2) Sửa data-tags="api,script,python" (viết thường, cách nhau dấu phẩy)
+        3) Thay tiêu đề/mô tả/ngày/tác giả
+        4) Chọn ngôn ngữ: class <code> = language-javascript|python|bash|json...
+        5) Nút "Tải" đổi file bằng data-filename
+      -->
+
+      <!-- ==== BÀI MẪU 1 ==== -->
+      <article class="script-card" id="api-key-checker-nodejs" data-tags="api,auth,nodejs" data-date="2025-11-11" data-cat="script">
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="tag-list">
+              <span class="tag">#api</span><span class="tag">#auth</span><span class="tag">#nodejs</span>
+            </div>
+            <span class="pulse"><i class="fa-solid fa-sparkles"></i>Mới</span>
+          </div>
+
+          <h3 class="card-title">
+            <a href="#api-key-checker-nodejs" title="Sao chép link bài này"><i class="fa-solid fa-link"></i> API Key Checker (Node.js, Fetch)</a>
+          </h3>
+
+          <p class="card-desc">Script Node.js kiểm tra API Key hợp lệ với fetch + timeout + lỗi rõ ràng.</p>
+
+          <div class="meta">
+            <span><i class="fa-regular fa-calendar"></i> 11/11/2025</span><span class="dot"></span>
+            <span><i class="fa-regular fa-user"></i> KaceHub Team</span><span class="dot"></span>
+            <span><i class="fa-solid fa-code"></i> Node.js</span>
+          </div>
+
+          <div class="code collapsed">
+            <div class="code-head">
+              <div class="code-label"><i class="fa-solid fa-file-code"></i> language: JavaScript</div>
+              <div class="code-actions">
+                <button class="btn copy" data-target="code-1"><i class="fa-regular fa-copy"></i>Copy</button>
+                <button class="btn dl" data-target="code-1" data-filename="api-key-checker.js"><i class="fa-solid fa-download"></i>Tải</button>
+                <button class="btn link" data-article="#api-key-checker-nodejs"><i class="fa-solid fa-link"></i>Link</button>
+                <button class="btn full" data-target="code-1" data-title="API Key Checker (Node.js)" data-filename="api-key-checker.js"><i class="fa-solid fa-maximize"></i> Xem full code</button>
+              </div>
+            </div>
+            <pre><code id="code-1" class="language-javascript">
+// Kiểm tra API Key hợp lệ (ví dụ endpoint /v1/ping)
+/* HDSD:
+   1) Đổi BASE_URL & API_KEY bên dưới
+   2) Chạy: node api-key-checker.js
+*/
+const BASE_URL = "https://api.example.com";
+const API_KEY   = process.env.API_KEY || "YOUR_API_KEY";
+
+async function checkKey() {
+  const ctrl = new AbortController();
+  const t = setTimeout(()=>ctrl.abort(), 10000);
+  try {
+    const res = await fetch(BASE_URL + "/v1/ping", {
+      method: "GET",
+      headers: { "Authorization": `Bearer ${API_KEY}`, "Accept": "application/json" },
+      signal: ctrl.signal
+    });
+    if (!res.ok) { const text = await res.text(); throw new Error(`HTTP ${res.status} - ${text}`); }
+    const data = await res.json();
+    console.log("✅ Key OK:", data);
+    return true;
+  } catch (err) {
+    console.error("❌ Key lỗi:", err.message);
+    return false;
+  } finally { clearTimeout(t); }
+}
+checkKey().then(ok => process.exit(ok ? 0 : 1));
+            </code></pre>
+          </div>
+        </div>
+        <div class="card-foot">
+          <span><i class="fa-regular fa-bookmark"></i> Chủ đề: Auth, Health check</span>
+          <span><i class="fa-regular fa-clock"></i> ~25 dòng</span>
+        </div>
+      </article>
+
+      <!-- ==== BÀI MẪU 2 ==== -->
+      <article class="script-card" id="curl-openai-sample" data-tags="api,curl,http" data-date="2025-11-10" data-cat="api">
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="tag-list"><span class="tag">#api</span><span class="tag">#curl</span><span class="tag">#http</span></div>
+            <span class="pulse" style="opacity:.85"><i class="fa-solid fa-star"></i>Gợi ý</span>
+          </div>
+
+          <h3 class="card-title"><a href="#curl-openai-sample"><i class="fa-solid fa-link"></i> cURL: gọi Chat Completions</a></h3>
+          <p class="card-desc">Mẫu cURL gửi prompt và nhận text. Thay API key và endpoint theo nhà cung cấp.</p>
+
+          <div class="meta">
+            <span><i class="fa-regular fa-calendar"></i> 10/11/2025</span><span class="dot"></span>
+            <span><i class="fa-regular fa-user"></i> KaceHub Team</span><span class="dot"></span>
+            <span><i class="fa-solid fa-terminal"></i> Shell</span>
+          </div>
+
+          <div class="code collapsed">
+            <div class="code-head">
+              <div class="code-label"><i class="fa-solid fa-file-code"></i> language: Bash (cURL)</div>
+              <div class="code-actions">
+                <button class="btn copy" data-target="code-2"><i class="fa-regular fa-copy"></i>Copy</button>
+                <button class="btn dl" data-target="code-2" data-filename="chat-curl.sh"><i class="fa-solid fa-download"></i>Tải</button>
+                <button class="btn link" data-article="#curl-openai-sample"><i class="fa-solid fa-link"></i>Link</button>
+                <button class="btn full" data-target="code-2" data-title="cURL Chat Completions" data-filename="chat-curl.sh"><i class="fa-solid fa-maximize"></i> Xem full code</button>
+              </div>
+            </div>
+            <pre><code id="code-2" class="language-bash">
+#!/usr/bin/env bash
+# Gọi endpoint chat completions (ví dụ)
+API_KEY="YOUR_API_KEY"
+ENDPOINT="https://api.example.com/v1/chat/completions"
+
+curl -s -X POST "$ENDPOINT" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "messages":[{"role":"user","content":"Xin chào, giới thiệu nhanh về sản phẩm của bạn."}],
+    "temperature": 0.2
+  }' | jq .
+            </code></pre>
+          </div>
+        </div>
+        <div class="card-foot">
+          <span><i class="fa-regular fa-bookmark"></i> Chủ đề: cURL, Chat</span>
+          <span><i class="fa-regular fa-clock"></i> ~15 dòng</span>
+        </div>
+      </article>
+
+      <!-- ==== BÀI MẪU 3 (danh mục TUT) ==== -->
+      <article class="script-card" id="python-retry-429" data-tags="script,python,retry,rate-limit,tut" data-date="2025-11-08" data-cat="tut">
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="tag-list"><span class="tag">#script</span><span class="tag">#python</span><span class="tag">#retry</span><span class="tag">#tut</span></div>
+            <span class="pulse" style="opacity:.8"><i class="fa-solid fa-graduation-cap"></i>Tut</span>
+          </div>
+
+          <h3 class="card-title"><a href="#python-retry-429"><i class="fa-solid fa-link"></i> Python: tự động retry khi 429/5xx</a></h3>
+          <p class="card-desc">Hàm tiện ích gọi API bằng <code>requests</code> có <em>exponential backoff</em> và jitter. Dùng lại cho nhiều endpoint.</p>
+
+          <div class="meta">
+            <span><i class="fa-regular fa-calendar"></i> 08/11/2025</span><span class="dot"></span>
+            <span><i class="fa-regular fa-user"></i> KaceHub Team</span><span class="dot"></span>
+            <span><i class="fa-solid fa-code"></i> Python</span>
+          </div>
+
+          <div class="code collapsed">
+            <div class="code-head">
+              <div class="code-label"><i class="fa-solid fa-file-code"></i> language: Python</div>
+              <div class="code-actions">
+                <button class="btn copy" data-target="code-3"><i class="fa-regular fa-copy"></i>Copy</button>
+                <button class="btn dl" data-target="code-3" data-filename="api_retry.py"><i class="fa-solid fa-download"></i>Tải</button>
+                <button class="btn link" data-article="#python-retry-429"><i class="fa-solid fa-link"></i>Link</button>
+                <button class="btn full" data-target="code-3" data-title="Python Retry 429/5xx" data-filename="api_retry.py"><i class="fa-solid fa-maximize"></i> Xem full code</button>
+              </div>
+            </div>
+            <pre><code id="code-3" class="language-python">
+import time, random, requests
+
+def call_with_retry(url, method="GET", headers=None, json=None, params=None, max_retry=5, base_delay=0.6):
+    """Gọi API với retry khi gặp 429 hoặc 5xx. Trả về (status_code, text)."""
+    headers = headers or {}
+
+    for attempt in range(max_retry):
+        try:
+            r = requests.request(method, url, headers=headers, json=json, params=params, timeout=15)
+            if r.status_code in (429, 500, 502, 503, 504):
+                delay = (2 ** attempt) * base_delay + random.uniform(0, 0.4)  # backoff + jitter
+                print(f"retry {attempt+1}/{max_retry} sau {delay:.2f}s - {r.status_code}")
+                time.sleep(delay); continue
+            return r.status_code, r.text
+        except requests.RequestException as e:
+            delay = (2 ** attempt) * base_delay + random.uniform(0, 0.4)
+            print(f"lỗi mạng: {e}; retry sau {delay:.2f}s"); time.sleep(delay)
+    return None, "Hết lượt retry"
+
+if __name__ == "__main__":
+    code, text = call_with_retry("https://httpbin.org/status/200")
+    print(code, text[:120])
+            </code></pre>
+          </div>
+        </div>
+        <div class="card-foot">
+          <span><i class="fa-regular fa-bookmark"></i> Chủ đề: Rate limit</span>
+          <span><i class="fa-regular fa-clock"></i> ~45 dòng</span>
+        </div>
+      </article>
+
+      <!-- ==== THÊM BÀI MỚI TẠI ĐÂY ==== -->
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+      © 2025 KaceHub. Thiết kế bởi bạn — đăng bài bằng cách sửa HTML. Danh mục: API • Script • Tut.
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" aria-live="polite" aria-atomic="true" style="position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px"></div>
+
+  <!-- Modal Full Code -->
+  <div class="modal" id="codeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box" tabindex="-1">
+      <div class="modal-head">
+        <div class="modal-title" id="modalTitle">Xem code</div>
+        <div class="modal-actions">
+          <button class="btn copy" data-modal-copy><i class="fa-regular fa-copy"></i>Copy</button>
+          <button class="btn dl" data-modal-dl><i class="fa-solid fa-download"></i>Tải</button>
+          <button class="btn modal-close" data-close-modal><i class="fa-solid fa-xmark"></i>Đóng</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <pre><code id="modalCode" class="language-plaintext"></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🕵️ Dev Tools Shield Overlay -->
+  <div class="devshield-overlay" id="devShield">
+    <div class="devshield-ring" aria-hidden="true"></div>
+    <div class="devshield-box" role="alertdialog" aria-modal="true" aria-labelledby="devShieldTitle">
+      <div class="devshield-icon">🕵️</div>
+      <div class="devshield-title" id="devShieldTitle">Soi code bố à con?</div>
+      <p class="devshield-sub">
+        KaceHub là kho chia sẻ code gọn gàng.  
+        <span>Đừng soi source nghịch phá nghe chưa.</span>
+      </p>
+      <button class="devshield-btn" id="devShieldClose">
+        <i class="fa-solid fa-circle-check"></i>
+        Dạ không
+      </button>
+      <div class="devshield-tip">
+        Mẹo nhỏ: dùng các nút <strong>Copy / Tải</strong> phía dưới từng bài để lấy code nhanh.
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    // ===== Highlight =====
+    try { hljs.highlightAll(); } catch(e){ console.warn("HLJS not loaded:", e) }
+
+    // ===== Toast =====
+    const toastBox = document.getElementById('toast');
+    function toast(msg){
+      const t = document.createElement('div');
+      t.className = 't';
+      t.style.background = 'linear-gradient(180deg, #0b1324, #0a1222)';
+      t.style.border = '1px solid rgba(56,189,248,.35)';
+      t.style.padding = '10px 12px';
+      t.style.borderRadius = '12px';
+      t.style.color = '#dbeafe';
+      t.style.fontSize = '14px';
+      t.style.boxShadow = '0 22px 50px rgba(2,6,23,.55)';
+      t.style.transform = 'translateY(10px)';
+      t.style.opacity = '0';
+      t.textContent = msg;
+      toastBox.appendChild(t);
+      requestAnimationFrame(()=>{ t.style.transition = 'all .22s ease'; t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
+      setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(8px)'; }, 1800);
+      setTimeout(()=> t.remove(), 2400);
+    }
+
+    // ===== Copy / Download helpers =====
+    function copyTextFromCode(codeEl){ return navigator.clipboard.writeText(codeEl.innerText); }
+    function downloadCode(codeEl, filename="snippet.txt"){
+      const blob = new Blob([codeEl.innerText], {type:"text/plain;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=> URL.revokeObjectURL(url), 500);
+    }
+
+    // ===== Filtering (search + tags + categories) =====
+    const cards = Array.from(document.querySelectorAll('.script-card'));
+    const searchInput = document.getElementById('search');
+    const chips = document.getElementById('chips');
+    const clearChips = document.getElementById('clearChips');
+    const categories = document.getElementById('categories');
+    const activeTags = new Set();
+    let activeCat = 'all';
+
+    function normalize(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'') }
+
+    function applyFilter(){
+      const q = normalize(searchInput.value);
+      cards.forEach(card=>{
+        const tags = (card.dataset.tags||'').split(',').map(t=>t.trim());
+        const text = normalize(card.innerText);
+        const matchText = !q || text.includes(q);
+        const matchTags = activeTags.size===0 || [...activeTags].every(t=>tags.includes(t));
+        const matchCat  = activeCat==='all' || (card.dataset.cat||'')===activeCat;
+        card.style.display = (matchText && matchTags && matchCat) ? '' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', applyFilter);
+    chips.addEventListener('click', (e)=>{
+      const chip = e.target.closest('.chip[data-tag]');
+      if(chip){
+        const tag = chip.dataset.tag;
+        chip.classList.toggle('active');
+        if(chip.classList.contains('active')) activeTags.add(tag); else activeTags.delete(tag);
+        applyFilter();
+      }
+    });
+    clearChips.addEventListener('click', ()=>{
+      activeTags.clear();
+      document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+      applyFilter();
+    });
+    categories.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.cat');
+      if(!btn) return;
+      activeCat = btn.dataset.cat || 'all';
+      document.querySelectorAll('.cat.active').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilter();
+    });
+
+    // ===== Sort newest -> oldest by data-date =====
+    (function sortByDateDesc(){
+      const list = document.getElementById('list');
+      const sorted = cards.sort((a,b)=> new Date(b.dataset.date||'1970-01-01') - new Date(a.dataset.date||'1970-01-01'));
+      sorted.forEach(el=>list.appendChild(el));
+    })();
+
+    // ===== Collapse code by default (if long) =====
+    (function initCollapse(){
+      document.querySelectorAll('.code').forEach(box=>{
+        const pre = box.querySelector('pre');
+        if(!pre) return;
+        box.classList.add('collapsed'); // mặc định thu gọn
+        const check = ()=>{ if(pre.scrollHeight <= 240) box.classList.remove('collapsed'); };
+        setTimeout(check, 120); // sau khi highlight xong
+      });
+    })();
+
+    // ===== Card actions (copy / download / link / full) =====
+    document.addEventListener('click', (e)=>{
+      const copyBtn = e.target.closest('.btn.copy');
+      const dlBtn   = e.target.closest('.btn.dl');
+      const linkBtn = e.target.closest('.btn.link');
+      const fullBtn = e.target.closest('.btn.full');
+
+      if(copyBtn){
+        const id = copyBtn.dataset.target;
+        const codeEl = document.getElementById(id);
+        if(codeEl){ copyTextFromCode(codeEl).then(()=>toast('Đã copy code')).catch(()=>toast('Không thể copy')); }
+      }
+      if(dlBtn){
+        const id = dlBtn.dataset.target;
+        const filename = dlBtn.dataset.filename || 'code.txt';
+        const codeEl = document.getElementById(id);
+        if(codeEl){ downloadCode(codeEl, filename); toast('Bắt đầu tải file'); }
+      }
+      if(linkBtn){
+        const sel = linkBtn.dataset.article;
+        if(sel){
+          const url = (location.href.split('#')[0] || location.href) + sel;
+          navigator.clipboard.writeText(url).then(()=>toast('Đã copy link bài viết'));
+        }
+      }
+      if(fullBtn){
+        const id = fullBtn.dataset.target;
+        const title = fullBtn.dataset.title || 'Xem code';
+        const filename = fullBtn.dataset.filename || 'snippet.txt';
+        const codeEl = document.getElementById(id);
+        const modal = document.getElementById('codeModal');
+        const modalCode = document.getElementById('modalCode');
+        const modalTitle = document.getElementById('modalTitle');
+        if(codeEl && modal && modalCode){
+          modalTitle.textContent = title;
+          modal.dataset.filename = filename;
+          modalCode.className = codeEl.className; // copy language-xxx
+          modalCode.textContent = codeEl.innerText; // giữ nguyên text
+          modal.classList.add('show');
+          try { hljs.highlightElement(modalCode); } catch(e){}
+        }
+      }
+    });
+
+    // ===== Modal events =====
+    function closeModal(){
+      const modal = document.getElementById('codeModal');
+      const modalCode = document.getElementById('modalCode');
+      modal.classList.remove('show');
+      modalCode.textContent = '';
+    }
+    document.addEventListener('click', (e)=>{
+      if(e.target.matches('[data-close-modal]')) return closeModal();
+      // click nền để đóng
+      const m = e.target.closest('.modal');
+      if(m && !e.target.closest('.modal-box')) closeModal();
+    });
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+
+    // Copy/Download trong modal
+    document.addEventListener('click', (e)=>{
+      if(e.target.matches('[data-modal-copy]')){
+        const codeEl = document.getElementById('modalCode');
+        copyTextFromCode(codeEl).then(()=>toast('Đã copy code')).catch(()=>toast('Không thể copy'));
+      }
+      if(e.target.matches('[data-modal-dl]')){
+        const codeEl = document.getElementById('modalCode');
+        const filename = document.getElementById('codeModal').dataset.filename || 'snippet.txt';
+        downloadCode(codeEl, filename); toast('Bắt đầu tải file');
+      }
+    });
+
+    // Scroll đến #hash nếu có
+    if(location.hash){
+      const el = document.querySelector(location.hash);
+      if(el){ setTimeout(()=> el.scrollIntoView({behavior:'smooth', block:'start'}), 120); }
+    }
+
+    // ===== Dev Tools Shield logic (F12 / Ctrl+U / chuột phải) =====
+    const devShield = document.getElementById('devShield');
+    const devShieldClose = document.getElementById('devShieldClose');
+
+    function showDevShield(){
+      if(!devShield) return;
+      devShield.classList.add('show');
+    }
+    function hideDevShield(){
+      if(!devShield) return;
+      devShield.classList.remove('show');
+    }
+
+    if(devShieldClose){
+      devShieldClose.addEventListener('click', ()=>{
+        hideDevShield();
+      });
+    }
+
+    // Chặn chuột phải
+    document.addEventListener('contextmenu', (e)=>{
+      e.preventDefault();
+      showDevShield();
+      toast('Chuột phải bị vô hiệu hoá.');
+    });
+
+    // Chặn F12, Ctrl+U, Ctrl+Shift+I
+    document.addEventListener('keydown', (e)=>{
+      const key = e.key.toLowerCase();
+      // F12
+      if(e.key === 'F12'){
+        e.preventDefault();
+        showDevShield();
+      }
+      // Ctrl+U
+      if(e.ctrlKey && key === 'u'){
+        e.preventDefault();
+        showDevShield();
+      }
+      // Ctrl+Shift+I
+      if(e.ctrlKey && e.shiftKey && key === 'i'){
+        e.preventDefault();
+        showDevShield();
+      }
+    });
+  </script>
+</body>
+</html>
+
