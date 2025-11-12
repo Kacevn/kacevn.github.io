@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Hồ sơ — Tên của bạn</title>
+  <meta name="description" content="Hồ sơ cá nhân chuyên nghiệp với liên kết Discord và blog bài viết." />
+  <!-- Optional font:
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"> -->
+  <style>
+    /* ===== Reset gọn & trợ năng ===== */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    img{max-width:100%;display:block}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+
+    /* ===== Tokens & theme ===== */
+    :root{
+      --accent:#5865F2;              /* Discord blurple */
+      --bg:#0b1018;
+      --bg-elev:#0f1623;
+      --text:#dfe7f5;
+      --muted:#97a0af;
+      --card:rgba(255,255,255,0.05);
+      --border:rgba(255,255,255,0.12);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --ring:0 0 0 1px var(--border);
+      --success:#22c55e;
+      --warning:#f59e0b;
+      --error:#ef4444;
+      --chip:#111827;
+      --chip-text:#e5e7eb;
+      --link:#a5b4fc;
+      --grid:#172135;
+      --glow: 0 0 24px color-mix(in oklab, var(--accent) 45%, transparent);
+    }
+    @media (prefers-color-scheme: light) {
+      :root{
+        --bg:#f6f8fc; --bg-elev:#ffffff; --text:#0f172a; --muted:#475569;
+        --card:rgba(0,0,0,0.04); --border:rgba(15,23,42,0.08); --shadow:0 10px 30px rgba(2,6,23,.08);
+        --chip:#eef2ff; --chip-text:#1e293b; --link:#4f46e5; --grid:#e5e7eb;
+      }
+    }
+    html[data-theme="dark"]{
+      --bg:#0b1018; --bg-elev:#0f1623; --text:#dfe7f5; --muted:#97a0af; --card:rgba(255,255,255,0.05);
+      --border:rgba(255,255,255,0.12); --shadow:0 10px 30px rgba(0,0,0,.35); --chip:#111827; --chip-text:#e5e7eb; --link:#a5b4fc; --grid:#172135;
+    }
+    html[data-theme="light"]{
+      --bg:#f6f8fc; --bg-elev:#ffffff; --text:#0f172a; --muted:#475569; --card:rgba(0,0,0,0.04);
+      --border:rgba(15,23,42,0.08); --shadow:0 10px 30px rgba(2,6,23,.08); --chip:#eef2ff; --chip-text:#1e293b; --link:#4f46e5; --grid:#e5e7eb;
+    }
+
+    /* ===== Background animated ===== */
+    body{
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", "Apple Color Emoji", "Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(88,101,242,.12), transparent 55%),
+        radial-gradient(900px 500px at 110% 10%, rgba(59,130,246,.10), transparent 60%),
+        var(--bg);
+      color:var(--text); line-height:1.6;
+      min-height:100dvh;
+      overflow-x:hidden;
+    }
+    .blobs {
+      position:fixed; inset:0; pointer-events:none; z-index:-1;
+      filter: blur(48px); opacity:.35; mix-blend-mode: screen;
+    }
+    .blob {
+      position:absolute; width:420px; height:420px; border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--accent) 65%, #fff 0%), transparent 60%);
+      animation: float 14s ease-in-out infinite alternate;
+    }
+    .blob.b2{left:65%; top:10%; animation-duration:18s}
+    .blob.b3{left:20%; top:60%; animation-duration:16s}
+    @keyframes float {
+      from { transform: translate3d(-20px, 0, 0) scale(1); }
+      to   { transform: translate3d(20px, 10px, 0) scale(1.08); }
+    }
+
+    .container{max-width:1100px;margin-inline:auto;padding:28px}
+    .grid-background{
+      position:fixed;inset:0;pointer-events:none;opacity:.35;
+      background-image:
+        linear-gradient(to right, var(--grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(1000px 600px at 50% -10%, #000 35%, transparent 70%);
+      animation: gridPulse 8s ease-in-out infinite alternate;
+    }
+    @keyframes gridPulse {
+      from { opacity:.25; transform: scale(1); }
+      to   { opacity:.5;  transform: scale(1.03); }
+    }
+
+    /* ===== Hero ===== */
+    header.hero{
+      position:relative;border:1px solid var(--border);border-radius:18px;padding:28px;
+      background:linear-gradient(180deg, var(--card), transparent);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      transition: box-shadow .3s ease;
+    }
+    header.hero::after{
+      /* accent beam */
+      content:""; position:absolute; inset:auto -20% -40% -20%; height:60%;
+      background: radial-gradient(60% 100% at 50% 100%, color-mix(in oklab,var(--accent) 25%, transparent) 0%, transparent 70%);
+      pointer-events:none; filter: blur(18px);
+      animation: beam 9s ease-in-out infinite alternate;
+    }
+    @keyframes beam { from{ transform: translateY(10px)} to{ transform: translateY(-10px)} }
+    .hero-inner{display:grid;grid-template-columns:100px 1fr auto;gap:20px;align-items:center}
+    @media (max-width:720px){.hero-inner{grid-template-columns:80px 1fr}}
+    .avatar{width:100px;height:100px;border-radius:50%;position:relative;overflow:hidden;isolation:isolate;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+    .avatar::before{
+      content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;
+      background:conic-gradient(from 120deg,var(--accent),#60a5fa,#22d3ee,var(--accent));
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude;
+      animation: ringSpin 8s linear infinite;
+    }
+    @keyframes ringSpin { to { transform: rotate(360deg); } }
+    .avatar img{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);object-fit:cover;border-radius:50%}
+    .title h1{font-size:1.6rem;margin:0 0 2px}
+    .title .role{color:var(--muted);font-weight:600}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .meta .pill{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;background:var(--chip);color:var(--chip-text);border:1px solid var(--border)}
+    .meta svg{width:16px;height:16px}
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      position:relative; overflow:hidden;
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 14px;border-radius:12px;border:1px solid var(--border);
+      background:var(--bg-elev);box-shadow:var(--shadow);cursor:pointer;
+      transition:transform .15s ease, border-color .2s ease, box-shadow .2s ease, translate .2s ease;
+      will-change: transform;
+    }
+    .btn:hover{transform:translateY(-1px); box-shadow: var(--shadow), var(--glow)}
+    .btn:active{translate:0 1px}
+    .btn-primary{background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 85%, #fff 15%), var(--accent));color:white;border-color:transparent}
+    .btn-ghost{background:linear-gradient(180deg, var(--card), transparent)}
+    .btn svg{width:18px;height:18px}
+    .ripple{
+      position:absolute; border-radius:50%; transform:translate(-50%, -50%); pointer-events:none;
+      animation: ripple .7s ease-out; background: color-mix(in oklab, #fff 45%, var(--accent) 55%);
+      opacity:.35; filter: blur(0.5px);
+    }
+    @keyframes ripple { from{ width:0; height:0; opacity:.35 } to{ width:300px; height:300px; opacity:0 } }
+
+    /* ===== Sections ===== */
+    .section{margin-top:28px}
+    .card{
+      border:1px solid var(--border);border-radius:18px;padding:22px;
+      background:linear-gradient(180deg, var(--card), transparent);
+      box-shadow:var(--shadow);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .card:hover{ transform: translateY(-2px); box-shadow: var(--shadow), var(--glow)}
+    .section h2{margin:0 0 14px;font-size:1.1rem; position:relative; display:inline-block}
+    .section h2::after{
+      content:""; position:absolute; left:0; bottom:-6px; height:2px; width:100%;
+      background:linear-gradient(90deg, var(--accent), transparent);
+      animation: underline 2.6s ease-in-out infinite;
+    }
+    @keyframes underline { 0%{transform:scaleX(.3); transform-origin:left} 50%{transform:scaleX(1)} 100%{transform:scaleX(.3); transform-origin:right} }
+
+    /* ===== Socials ===== */
+    .socials{display:flex;flex-wrap:wrap;gap:12px}
+    .social-link{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;border:1px solid var(--border);background:var(--bg-elev);
+      transition:transform .15s ease, box-shadow .15s ease; box-shadow:var(--shadow)
+    }
+    .social-link:hover{transform:translateY(-2px); box-shadow: var(--shadow), var(--glow)}
+    .social-link svg{width:18px;height:18px}
+
+    /* ===== Info grid ===== */
+    .grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+    @media (max-width:1024px){.grid{grid-template-columns:1fr}}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:6px 10px;border-radius:999px;background:var(--chip);color:var(--chip-text);border:1px solid var(--border);font-weight:600}
+    .note{font-size:.92rem;color:var(--muted)}
+
+    /* ===== Discord ===== */
+    .discord-card{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+    .discord-id{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .status-dot{width:10px;height:10px;border-radius:50%; background:var(--success);box-shadow:0 0 0 3px color-mix(in oklab, var(--success) 20%, transparent);}
+    .discord-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .discord-widget{margin-top:12px;display:none}
+    .discord-widget.open{display:block}
+    iframe.discord{width:100%;min-height:380px;border:0;border-radius:12px;outline:1px solid var(--border)}
+
+    /* ===== Projects ===== */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media (max-width:1024px){.cards{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:680px){.cards{grid-template-columns:1fr}}
+    .project{padding:16px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(180deg, var(--card), transparent)}
+    .project h3{margin:0 0 6px;font-size:1rem}
+    .project p{margin:0;color:var(--muted)}
+    .project .tags{margin-top:10px}
+
+    /* ===== Websites (Links) ===== */
+    .links-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+    @media (max-width:1024px){.links-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:680px){.links-grid{grid-template-columns:1fr}}
+
+    .link-card{
+      position:relative; display:block; border:1px solid var(--border); border-radius:16px; overflow:hidden;
+      background:linear-gradient(180deg, var(--card), transparent); box-shadow:var(--shadow);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .link-card:hover{ transform:translateY(-3px); box-shadow: var(--shadow), var(--glow) }
+
+    .link-card .cover{aspect-ratio:16/9; width:100%; object-fit:cover; display:block;
+      background:linear-gradient(90deg, #0001, #0002, #0001);
+    }
+    .link-card .no-cover{
+      display:flex; align-items:center; justify-content:center; aspect-ratio:16/9;
+      background:linear-gradient(135deg, color-mix(in oklab, var(--accent) 20%, transparent), transparent 60%);
+    }
+    .link-card .no-cover .initial{ font-weight:800; font-size:1.6rem; color:var(--text); opacity:.9 }
+
+    .link-card .body{padding:14px}
+    .link-card h3{margin:0 0 6px; font-size:1rem}
+    .link-card .desc{color:var(--muted); margin:0}
+    .link-card .meta{display:flex; align-items:center; gap:8px; color:var(--muted); font-size:.92rem; margin-top:8px}
+    .link-card .favicon{width:16px; height:16px; border-radius:4px}
+    .link-card .ext{position:absolute; right:10px; top:10px; opacity:.75}
+    .link-card .ext svg{width:18px; height:18px}
+
+    /* ===== POSTS (Blog) ===== */
+    .posts-controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px}
+    .search{
+      display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--bg-elev); flex:1 1 260px;
+      box-shadow:var(--shadow);
+    }
+    .search input{border:0;outline:0;background:transparent;color:var(--text);width:100%}
+    .posts-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:16px}
+    @media (max-width:1024px){.posts-grid{grid-template-columns:repeat(2, 1fr)}}
+    @media (max-width:680px){.posts-grid{grid-template-columns:1fr}}
+    .post{
+      position:relative; border:1px solid var(--border); border-radius:16px; overflow:hidden; background:linear-gradient(180deg, var(--card), transparent);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      will-change: transform;
+    }
+    .post:hover{ transform: translateY(-3px); box-shadow: var(--shadow), var(--glow)}
+    .post .cover{aspect-ratio:16/9; width:100%; object-fit:cover; background:linear-gradient(90deg, #0001, #0002, #0001); }
+    .post .body{padding:14px}
+    .post h3{margin:0 0 6px; font-size:1rem}
+    .meta-line{display:flex; gap:10px; align-items:center; color:var(--muted); font-size:.92rem; flex-wrap:wrap}
+    .badge{padding:4px 8px; border-radius:999px; border:1px solid var(--border); background:var(--chip); color:var(--chip-text); font-size:.8rem; font-weight:700}
+    .post .footer{display:flex; justify-content:space-between; align-items:center; margin-top:10px}
+    .post .taglist{display:flex; gap:6px; flex-wrap:wrap}
+    .post .excerpt{color:var(--muted); margin-top:6px}
+    .tilt{transform-style:preserve-3d; perspective:900px}
+
+    /* ===== Modal bài viết ===== */
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45); backdrop-filter: blur(6px); z-index:1000}
+    .modal.open{display:flex}
+    .modal-card{
+      width:min(900px, 100%); max-height:90dvh; overflow:auto; border-radius:16px; background:var(--bg-elev); border:1px solid var(--border); box-shadow: var(--shadow), var(--glow);
+      animation: pop .2s ease-out;
+    }
+    @keyframes pop { from{ transform: scale(.98); opacity:0 } to{ transform: scale(1); opacity:1 } }
+    .modal-header{display:flex; gap:12px; align-items:center; justify-content:space-between; padding:14px 16px; position:sticky; top:0; background:linear-gradient(180deg, color-mix(in oklab, var(--bg-elev) 85%, transparent), var(--bg-elev)); border-bottom:1px solid var(--border); z-index:1}
+    .modal-title{margin:0; font-size:1.1rem}
+    .modal-content{padding:16px}
+    .progress{position:absolute; left:0; right:0; top:0; height:3px; background:linear-gradient(90deg, var(--accent), #22d3ee); transform-origin:left; transform: scaleX(0)}
+    .modal-cover{aspect-ratio:16/9; width:100%; object-fit:cover; border-bottom:1px solid var(--border)}
+    .modal-actions{display:flex; gap:8px}
+    .close-btn{border:none; background:transparent; color:var(--text); cursor:pointer; padding:8px 10px; border-radius:10px}
+    .close-btn:hover{background:var(--card)}
+    .post-content{line-height:1.75}
+    .post-content h1,.post-content h2,.post-content h3{margin:1.2em 0 .6em}
+    .post-content p{margin:.8em 0}
+    .post-content code{padding:.15em .35em;border-radius:6px;background:var(--chip); color:var(--chip-text)}
+
+    /* ===== Footer ===== */
+    footer{margin:28px 0;color:var(--muted);font-size:.92rem;text-align:center}
+
+    /* ===== Scroll reveal ===== */
+    [data-reveal]{opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.65,.2,1)}
+    [data-reveal].revealed{opacity:1; transform: translateY(0)}
+    [data-reveal].stagger > *{opacity:0; transform: translateY(12px)}
+    [data-reveal].stagger.revealed > *{animation: itemIn .6s ease forwards}
+    [data-reveal].stagger.revealed > *:nth-child(1){animation-delay:.02s}
+    [data-reveal].stagger.revealed > *:nth-child(2){animation-delay:.06s}
+    [data-reveal].stagger.revealed > *:nth-child(3){animation-delay:.1s}
+    [data-reveal].stagger.revealed > *:nth-child(4){animation-delay:.14s}
+    @keyframes itemIn { from{opacity:0; transform: translateY(12px)} to{opacity:1; transform: translateY(0)} }
+
+    /* ===== Reduced motion ===== */
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important; animation:none !important}
+      [data-reveal]{opacity:1 !important; transform:none !important}
+    }
+
+    /* ===== Anti DevTools overlay ===== */
+    .devtools-overlay{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+      padding:24px; background:rgba(0,0,0,.55); backdrop-filter: blur(6px); z-index: 99999;
+    }
+    .devtools-overlay.open{ display:flex; }
+    .devtools-overlay .box{
+      max-width:520px; width:min(520px, 100%); text-align:center; padding:20px;
+      border:1px solid var(--border); border-radius:16px; background:var(--bg-elev);
+      box-shadow: var(--shadow), 0 0 24px color-mix(in oklab, var(--accent) 45%, transparent);
+    }
+    .devtools-overlay .box h3{ margin:0 0 6px; }
+    .devtools-overlay .box p{ margin:0 0 14px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <a href="#main" class="sr-only">Bỏ qua đến nội dung chính</a>
+
+  <!-- Animated background -->
+  <div class="blobs" aria-hidden="true">
+    <div class="blob b1" style="left:-8%; top:-6%"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+  <div class="grid-background" aria-hidden="true"></div>
+
+  <div class="container">
+    <!-- ===== HERO ===== -->
+    <header class="hero tilt" data-reveal>
+      <div class="hero-inner">
+        <div class="avatar">
+          <!-- TODO: thay ảnh avatar -->
+          <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=512" alt="Ảnh đại diện">
+        </div>
+
+        <div class="title">
+          <h1>TODO: Tên của bạn</h1>
+          <div class="role">TODO: Chức danh / Vai trò</div>
+          <div class="meta" role="list">
+            <span class="pill" role="listitem" title="Vị trí">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"/></svg>
+              TODO: Thành phố, Quốc gia
+            </span>
+            <span class="pill" role="listitem" title="Email">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 6.5A2.5 2.5 0 0 1 4.5 4h15A2.5 2.5 0 0 1 22 6.5v11A2.5 2.5 0 0 1 19.5 20h-15A2.5 2.5 0 0 1 2 17.5v-11Zm2.2-.5 7.3 5.1L18.8 6H4.2Zm15.3 2.2-6.7 4.7a1.5 1.5 0 0 1-1.7 0L4.4 8.2V17c0 .28.22.5.5.5h14.2c.28 0 .5-.22.5-.5V8.2Z"/></svg>
+              <a href="mailto:TODO_email">TODO_email</a>
+            </span>
+            <span class="pill" role="listitem" title="Trạng thái">
+              <span class="status-dot" aria-hidden="true"></span> Đang mở nhận cơ hội
+            </span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" data-ripple onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="m2 3 20 9-20 9 3-9-3-9Zm6.6 9L5.5 17.1 17 12 5.5 6.9 8.6 12Z"/></svg>
+            Liên hệ
+          </button>
+          <a class="btn btn-ghost" data-ripple href="TODO_link_CV.pdf" download>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a1 1 0 0 1 1 1v8.586l2.293-2.293a1 1 0 1 1 1.414 1.414l-4.007 4.007a1.25 1.25 0 0 1-1.8 0L6.88 11.707a1 1 0 0 1 1.414-1.414L10.5 12.5V4a1 1 0 0 1 1-1Zm-6 15a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Z"/></svg>
+            Tải CV
+          </a>
+          <button id="theme-toggle" class="btn" data-ripple aria-label="Chuyển giao diện">
+            <svg id="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ===== SOCIALS ===== -->
+      <section class="section card" aria-labelledby="soc-heading" data-reveal>
+        <h2 id="soc-heading">Mạng xã hội</h2>
+        <div class="socials">
+          <a class="social-link" href="https://linkedin.com/in/TODO" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0ZM.5 8.5h4.9V24H.5zM8.8 8.5H13v2.1h.1c.6-1.1 2-2.3 4.2-2.3 4.5 0 5.3 3 5.3 6.8V24h-4.9v-6.8c0-1.6 0-3.7-2.2-3.7-2.2 0-2.6 1.7-2.6 3.6V24H8.8z"/></svg>
+            LinkedIn
+          </a>
+          <a class="social-link" href="https://github.com/TODO" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-2c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.2-1.5-1.2-1.5-1-.7.1-.7.1-.7 1.1.1 1.6 1.1 1.6 1.1 1 .1.7-.7 1.9-1.3-2.2-.2-4.5-1.1-4.5-4.9 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5.1 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.8-2.3 4.7-4.5 4.9.6.5 1 .1 2 .9v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>
+            GitHub
+          </a>
+          <a class="social-link" href="https://twitter.com/TODO" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23 22h-6.9l-5.4-6.7L4.5 22H2l8.2-9.3L1.3 2H8l5 6.2L18.9 2Zm-1.2 18h2.1L6.4 4H4.2l13.5 16Z"/></svg>
+            X (Twitter)
+          </a>
+          <a class="social-link" href="https://instagram.com/TODO" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.5 5.5 0 0 1 12 7.5Zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5Zm5-2.75a1.25 1.25 0 1 1-1.25 1.25A1.25 1.25 0 0 1 17 6.75Z"/></svg>
+            Instagram
+          </a>
+          <a class="social-link" href="https://youtube.com/@TODO" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 7.6a4 4 0 0 0-2.8-2.8C18.9 4.3 12 4.3 12 4.3s-6.9 0-8.7.5A4 4 0 0 0 .5 7.6 41 41 0 0 0 0 12a41 41 0 0 0 .5 4.4 4 4 0 0 0 2.8 2.8c1.8.5 8.7.5 8.7.5s6.9 0 8.7-.5a4 4 0 0 0 2.8-2.8c.3-1.4.5-2.9.5-4.4a41 41 0 0 0-.5-4.4ZM9.7 15.5V8.5L15.8 12 9.7 15.5Z"/></svg>
+            YouTube
+          </a>
+        </div>
+      </section>
+
+      <!-- ===== INFO & SKILLS ===== -->
+      <section class="section grid">
+        <article class="card" aria-labelledby="about-heading" data-reveal>
+          <h2 id="about-heading">Giới thiệu</h2>
+          <p>
+            TODO: Viết một đoạn giới thiệu ngắn gọn (2–3 câu) về kinh nghiệm, thế mạnh và giá trị bạn mang lại.
+            Ví dụ: Tôi là Product Designer với 6+ năm kinh nghiệm trong SaaS/B2B, tập trung vào tăng tỷ lệ chuyển đổi
+            và trải nghiệm người dùng bằng giải pháp dữ liệu.
+          </p>
+          <div class="chips" style="margin-top:10px">
+            <span class="chip">#product</span>
+            <span class="chip">#ui/ux</span>
+            <span class="chip">#web</span>
+            <span class="chip">#analytics</span>
+          </div>
+        </article>
+
+        <aside class="card" aria-labelledby="quick-heading" data-reveal>
+          <h2 id="quick-heading">Thông tin nhanh</h2>
+          <ul style="list-style:none;padding:0;margin:0">
+            <li>🏢 Công ty hiện tại: <strong>TODO</strong></li>
+            <li>🕒 Hình thức: <strong>Toàn thời gian / Freelance</strong></li>
+            <li>🌐 Website: <a href="https://TODO_website" target="_blank" rel="noopener">TODO_website</a></li>
+            <li>📧 Email: <a href="mailto:TODO_email">TODO_email</a></li>
+            <li>📞 SĐT: <a href="tel:TODO_phone">TODO_phone</a></li>
+          </ul>
+        </aside>
+      </section>
+
+      <!-- ===== DISCORD ===== -->
+      <section class="section card" aria-labelledby="discord-heading" data-reveal>
+        <h2 id="discord-heading">Discord</h2>
+        <div class="discord-card">
+          <div class="discord-id">
+            <span class="status-dot" title="Online"></span>
+            <strong id="discord-handle">TODO: your_handle</strong>
+            <span style="color:var(--muted)">/</span>
+            <span id="discord-user-id" style="font-variant-numeric:tabular-nums">TODO_USER_ID</span>
+            <button class="btn" data-ripple onclick="copyDiscord()">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3a3 3 0 0 0-3 3v9a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3H9Zm-4 6H5a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h9a3 3 0 0 0 3-3v-1H9a4 4 0 0 1-4-4V9Z"/></svg>
+              Copy
+            </button>
+          </div>
+          <div class="discord-actions">
+            <a class="btn btn-primary" data-ripple href="https://discord.gg/TODO_INVITE_CODE" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.3A18 18 0 0 0 15.6 3l-.3.6a16 16 0 0 1 4 .9c-1.6-.8-3.4-1.3-5.2-1.5-2-.2-4 0-6 .6-.3.1-.6.2-.8.3h-.1l-.2.1h-.1L6.8 3c-1.7.3-3 .9-3 1l-.1.1a18.6 18.6 0 0 0-2.7 13.6 17 17 0 0 0 5.1 2.6l.9-1.6a11 11 0 0 1-2.3-1.2l.5-.4c0-.1.1-.1.1-.1l.3-.2.1-.1.3-.2.1-.1.2-.1.1-.1a10 10 0 0 0 10.5 0l.2.2.2.1.2.2.1.1.2.1h.1l.4.3.1.1.5.3-.3.2a11 11 0 0 1-2.1 1.1l.9 1.5a17 17 0 0 0 5.1-2.6A18.6 18.6 0 0 0 22.2 5c0-.2-1-0.5-1.9-.7Z"/></svg>
+              Tham gia server
+            </a>
+            <a class="btn" data-ripple id="dm-button" href="https://discord.com/users/TODO_USER_ID" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2h11A2.5 2.5 0 0 1 20 4.5v8A2.5 2.5 0 0 1 17.5 15H9.4L5 19.4a.75.75 0 0 1-1.28-.53V15H4A2.5 2.5 0 0 1 1.5 12.5v-8Z"/></svg>
+              Nhắn tin (DM)
+            </a>
+            <button id="toggle-widget" class="btn" data-ripple>Hiện Widget server</button>
+          </div>
+        </div>
+
+        <div id="discord-widget" class="discord-widget">
+          <iframe
+            class="discord"
+            src="https://discord.com/widget?id=TODO_SERVER_ID&theme=dark"
+            allowtransparency="true"
+            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+          </iframe>
+          <p class="note">Gợi ý: Vào <em>Server Settings → Widget</em> bật “Enable Server Widget”, rồi thay <code>TODO_SERVER_ID</code> bằng ID server.</p>
+        </div>
+      </section>
+
+      <!-- ===== PROJECTS / HIGHLIGHTS ===== -->
+      <section class="section" aria-labelledby="proj-heading" data-reveal>
+        <h2 id="proj-heading">Dự án nổi bật</h2>
+        <div class="cards stagger" data-reveal>
+          <article class="project tilt">
+            <h3>TODO: Tên dự án #1</h3>
+            <p>Mô tả ngắn gọn về mục tiêu & kết quả (số liệu càng tốt).</p>
+            <div class="tags chips">
+              <span class="chip">React</span><span class="chip">UI/UX</span><span class="chip">A/B</span>
+            </div>
+          </article>
+          <article class="project tilt">
+            <h3>TODO: Tên dự án #2</h3>
+            <p>Giải pháp, vai trò của bạn, tác động đến KPI.</p>
+            <div class="tags chips">
+              <span class="chip">Node.js</span><span class="chip">API</span><span class="chip">Cloud</span>
+            </div>
+          </article>
+          <article class="project tilt">
+            <h3>TODO: Tên dự án #3</h3>
+            <p>Tóm tắt bài học & kết quả đo lường.</p>
+            <div class="tags chips">
+              <span class="chip">Analytics</span><span class="chip">SQL</span><span class="chip">Dashboards</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===== WEBSITES ===== -->
+      <section class="section card" aria-labelledby="websites-heading" data-reveal>
+        <h2 id="websites-heading">Website của mình</h2>
+        <div id="websites-grid" class="links-grid stagger" data-reveal></div>
+      </section>
+
+      <!-- ===== POSTS (BLOG) ===== -->
+      <section class="section card" aria-labelledby="posts-heading" data-reveal>
+        <h2 id="posts-heading">Bài viết</h2>
+
+        <div class="posts-controls">
+          <div class="search">
+            <!-- search icon -->
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path d="M10 2a8 8 0 1 1 0 16c-1.8 0-3.4-.6-4.7-1.6L2.3 19.4a1 1 0 0 1-1.4-1.4l3-3a8 8 0 0 1 6.1-13Zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 10 4Z"/></svg>
+            <input id="post-search" type="search" placeholder="Tìm bài viết, tag, từ khóa…">
+          </div>
+
+          <div id="tag-chips" class="chips" aria-label="Lọc theo tag"></div>
+
+          <div class="actions" style="margin-left:auto">
+            <label class="btn" data-ripple style="user-select:none">
+              <input id="toggle-drafts" type="checkbox" style="accent-color:var(--accent); margin-right:8px">Hiện bài nháp
+            </label>
+            <select id="sort-select" class="btn" aria-label="Sắp xếp">
+              <option value="newest">Mới nhất</option>
+              <option value="oldest">Cũ nhất</option>
+              <option value="az">A → Z</option>
+              <option value="za">Z → A</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="posts-grid" class="posts-grid stagger" data-reveal aria-live="polite"></div>
+        <p id="posts-empty" class="note" style="display:none">Không tìm thấy bài phù hợp. Hãy thử từ khóa khác hoặc bỏ lọc tag.</p>
+      </section>
+
+      <!-- ===== CONTACT ===== -->
+      <section id="contact" class="section card" aria-labelledby="contact-heading" data-reveal>
+        <h2 id="contact-heading">Liên hệ</h2>
+        <p>Ưu tiên email/Discord. Tôi phản hồi trong giờ hành chính (GMT+7).</p>
+        <div class="actions">
+          <a class="btn btn-primary" data-ripple href="mailto:TODO_email">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="m2 3 20 9-20 9 3-9-3-9Zm6.6 9L5.5 17.1 17 12 5.5 6.9 8.6 12Z"/></svg>
+            Gửi email
+          </a>
+          <a class="btn" data-ripple href="https://discord.gg/TODO_INVITE_CODE" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.3A18 18 0 0 0 15.6 3l-.3.6a16 16 0 0 1 4 .9c-1.6-.8-3.4-1.3-5.2-1.5-2-.2-4 0-6 .6-.3.1-.6.2-.8.3h-.1l-.2.1h-.1L6.8 3c-1.7.3-3 .9-3 1l-.1.1a18.6 18.6 0 0 0-2.7 13.6 17 17 0 0 0 5.1 2.6l.9-1.6a11 11 0 0 1-2.3-1.2l.5-.4c0-.1.1-.1.1-.1l.3-.2.1-.1.3-.2.1-.1.2-.1.1-.1a10 10 0 0 0 10.5 0l.2.2.2.1.2.2.1.1.2.1h.1l.4.3.1.1.5.3-.3.2a11 11 0 0 1-2.1 1.1l.9 1.5a17 17 0 0 0 5.1-2.6A18.6 18.6 0 0 0 22.2 5c0-.2-1-0.5-1.9-.7Z"/></svg>
+            Mở Discord
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © <span id="year"></span> • Giao diện nâng cấp hiệu ứng • Tuỳ biến nhanh với biến màu <code>--accent</code>.
+    </footer>
+  </div>
+
+  <!-- ===== Modal Viewer ===== -->
+  <div id="post-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="progress" id="modal-progress"></div>
+      <div class="modal-header">
+        <h3 id="modal-title" class="modal-title">Đang tải…</h3>
+        <div class="modal-actions">
+          <button class="btn" data-ripple id="copy-link-btn" title="Copy liên kết">Copy link</button>
+          <button class="close-btn" id="modal-close" aria-label="Đóng">
+            <!-- close icon -->
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M6.2 4.8 4.8 6.2 10.6 12l-5.8 5.8 1.4 1.4L12 13.4l5.8 5.8 1.4-1.4L13.4 12l5.8-5.8-1.4-1.4L12 10.6 6.2 4.8Z"/></svg>
+          </button>
+        </div>
+      </div>
+      <img id="modal-cover" class="modal-cover" alt="" />
+      <div class="modal-content">
+        <div class="meta-line" id="modal-meta"></div>
+        <div id="modal-html" class="post-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Anti DevTools overlay (hiển thị khi cố mở devtools) ===== -->
+  <div id="devtools-overlay" class="devtools-overlay" role="dialog" aria-modal="true" aria-label="Cảnh báo">
+    <div class="box">
+      <h3>🚫 Tính làm kaito kid à cưng?</h3>
+      <p>Mở công cụ nhà phát triển đã bị vô hiệu hoá trên trang này.</p>
+      <button id="devtools-ok" class="btn btn-primary" data-ripple>Ok, biết rồi</button>
+    </div>
+  </div>
+
+  <!-- ===== Scripts ===== -->
+  <script>
+    // ===== Theme (auto / dark / light) + toggle & persist =====
+    const root = document.documentElement;
+    const storageKey = 'profile-theme';
+    const saved = localStorage.getItem(storageKey);
+    function applyTheme(mode){
+      if(mode === 'dark' || mode === 'light'){
+        root.setAttribute('data-theme', mode);
+      } else {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    }
+    applyTheme(saved || 'auto');
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const current = root.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem(storageKey, next);
+    });
+
+    // ===== Ripple on buttons =====
+    document.addEventListener('click', (e)=>{
+      const btn = e.target.closest('[data-ripple]');
+      if(!btn) return;
+      const r = document.createElement('span');
+      const rect = btn.getBoundingClientRect();
+      r.className = 'ripple'; r.style.left = (e.clientX - rect.left) + 'px'; r.style.top = (e.clientY - rect.top) + 'px';
+      btn.appendChild(r);
+      setTimeout(()=> r.remove(), 700);
+    });
+
+    // ===== 3D Tilt for .tilt cards =====
+    const tilts = Array.from(document.querySelectorAll('.tilt'));
+    const isTouch = matchMedia('(pointer: coarse)').matches;
+    tilts.forEach(el=>{
+      if(isTouch) return;
+      el.addEventListener('mousemove', (e)=>{
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        const rx = (0.5 - y) * 6;  // rotateX
+        const ry = (x - 0.5) * 8;  // rotateY
+        el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
+      });
+      el.addEventListener('mouseleave', ()=> el.style.transform = '');
+    });
+
+    // ===== Scroll reveal =====
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!prefersReduced){
+      const observer = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {threshold: .12});
+      document.querySelectorAll('[data-reveal]').forEach(el=> observer.observe(el));
+    } else {
+      document.querySelectorAll('[data-reveal]').forEach(el=> el.classList.add('revealed'));
+    }
+
+    // ===== Copy Discord handle/ID =====
+    function toast(msg){
+      const el = document.createElement('div');
+      el.textContent = msg;
+      Object.assign(el.style, {
+        position:'fixed', left:'50%', bottom:'22px', transform:'translateX(-50%)',
+        padding:'10px 14px', background:'var(--bg-elev)', color:'var(--text)',
+        border:'1px solid var(--border)', borderRadius:'10px', boxShadow:'var(--shadow)', zIndex:9999
+      });
+      document.body.appendChild(el);
+      setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .4s'; }, 1400);
+      setTimeout(()=>{ document.body.removeChild(el); }, 1900);
+    }
+    window.copyDiscord = function(){
+      const handle = document.getElementById('discord-handle').textContent.trim();
+      const id = document.getElementById('discord-user-id').textContent.trim();
+      const text = `${handle} • ${id}`;
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).then(()=>toast('Đã copy: ' + text));
+      } else {
+        const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
+        try{ document.execCommand('copy'); toast('Đã copy: ' + text); } finally { document.body.removeChild(t); }
+      }
+    };
+
+    // ===== Toggle Discord widget =====
+    const widgetBtn = document.getElementById('toggle-widget');
+    const widget = document.getElementById('discord-widget');
+    widgetBtn.addEventListener('click', ()=>{
+      widget.classList.toggle('open');
+      widgetBtn.textContent = widget.classList.contains('open') ? 'Ẩn Widget server' : 'Hiện Widget server';
+    });
+
+    // ===== Footer year =====
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ==========================================================
+    // === POSTS DATA ===  (Bạn sửa/đăng bài tại đây)
+    const POSTS = [
+      {
+        id: 'design-system-2025',
+        title: 'Xây design system nhẹ mà mạnh: 7 nguyên tắc cho 2025',
+        date: '2025-06-18',
+        tags: ['UI/UX','Design System','Web'],
+        cover: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200',
+        excerpt: 'Cách tôi tối ưu token, component và guideline để tăng tốc ship tính năng mà vẫn giữ trải nghiệm nhất quán.',
+        content: `
+          <p>Thiết kế hệ thống (design system) không chỉ là thư viện component. Đó là <strong>ngôn ngữ</strong> giữa design, dev và business.</p>
+          <h2>1) Bắt đầu từ token</h2>
+          <p>Dùng token chuẩn hoá màu, khoảng cách, radius và shadow. Ưu tiên <code>oklab</code>/<code>color-mix()</code> để kiểm soát tương phản trong dark mode.</p>
+          <h2>2) Chỉ build cái dùng nhiều</h2>
+          <p>Đừng “perfect” ngay. Ship 20% component giải quyết 80% flow, phần còn lại làm theo nhu cầu.</p>
+          <p><em>Tip:</em> viết guideline ngắn, nhiều ví dụ. Kiểm thử A/B trên màn hình quan trọng.</p>
+        `,
+        draft: false
+      },
+      {
+        id: 'metrics-that-matter',
+        title: 'Đo lường điều quan trọng: 5 chỉ số sản phẩm đáng theo dõi',
+        date: '2025-03-02',
+        tags: ['Product','Analytics','Growth'],
+        cover: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200',
+        excerpt: 'Không phải metric nào cũng giúp ra quyết định. Đây là 5 nhóm số liệu tôi dùng để ưu tiên roadmap.',
+        content: `
+          <p>Hãy tách <strong>leading</strong> vs <strong>lagging</strong> metrics. Ví dụ, <code>Activation</code> dẫn đến <code>Retention</code>.</p>
+          <ul>
+            <li>Activation (Aha moment)</li>
+            <li>Retention theo cohort</li>
+            <li>Time-to-Value</li>
+            <li>Feature adoption</li>
+            <li>North Star riêng cho sản phẩm</li>
+          </ul>
+          <p>Đừng quên chất lượng dữ liệu: event naming, schema và QA tracking.</p>
+        `,
+        draft: false
+      },
+      {
+        id: 'dev-notes-tilt',
+        title: 'Note kỹ thuật: hiệu ứng 3D tilt & scroll reveal không dùng thư viện',
+        date: '2025-01-15',
+        tags: ['Frontend','Animation','Tips'],
+        cover: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200',
+        excerpt: 'Giải thích nhanh cách tạo tilt theo chuột và reveal theo IntersectionObserver.',
+        content: `
+          <p>Bí quyết là <code>transform: perspective()</code> + tính toán góc xoay theo vị trí chuột. Scroll reveal dùng <code>IntersectionObserver</code> để thêm class.</p>
+          <p>Ưu tiên hiệu năng: bật <code>will-change</code>, hạn chế box-shadow nặng, và tôn trọng <code>prefers-reduced-motion</code>.</p>
+        `,
+        draft: true
+      }
+    ];
+    // ==========================================================
+
+    // === WEBSITES DATA === (Bạn điền link/mô tả/ảnh ở đây)
+    // Mỗi mục: { title, url, desc, cover? }
+    // - cover: URL ảnh bìa (tùy chọn); nếu không có, card sẽ hiển thị nền + chữ cái đầu.
+    // - Toàn bộ card click để mở tab mới.
+    const WEBSITES = [
+      {
+        title: 'KACE HUBB — Share API Script',
+        url: 'https://kacehubb.x10.bz/',
+        desc: 'Share API Script “siêu VIP” cho anh em developer: test nhanh, tích hợp gọn.',
+        cover: 'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200'
+      },
+      // { title: 'Tên website #2', url: 'https://...', desc: 'Mô tả ngắn', cover: 'https://...' },
+      // { title: 'Tên website #3', url: 'https://...', desc: 'Mô tả ngắn' } // không cover cũng được
+    ];
+
+    // ===== Render Websites =====
+    const websitesGrid = document.getElementById('websites-grid');
+    function hostFromUrl(url){ try{ return new URL(url).hostname.replace(/^www\./,''); } catch { return url; } }
+
+    function renderWebsites(){
+      if(!websitesGrid) return;
+      websitesGrid.innerHTML = '';
+      WEBSITES.forEach(site=>{
+        const domain = hostFromUrl(site.url);
+        const a = document.createElement('a');
+        a.className = 'link-card tilt';
+        a.href = site.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer external';
+        a.setAttribute('data-ripple','');
+        a.setAttribute('aria-label', `Mở ${site.title} (${domain})`);
+        a.title = site.url;
+
+        // cover hoặc fallback
+        if(site.cover){
+          const img = document.createElement('img');
+          img.className = 'cover'; img.src = site.cover; img.alt = site.title;
+          a.appendChild(img);
+        } else {
+          const ph = document.createElement('div');
+          ph.className = 'no-cover';
+          const span = document.createElement('span');
+          span.className = 'initial';
+          span.textContent = (site.title?.trim()?.[0] || domain?.[0] || 'W').toUpperCase();
+          ph.appendChild(span);
+          a.appendChild(ph);
+        }
+
+        // body
+        const body = document.createElement('div'); body.className = 'body';
+        const h3 = document.createElement('h3'); h3.textContent = site.title; body.appendChild(h3);
+        if(site.desc){
+          const p = document.createElement('p'); p.className = 'desc'; p.textContent = site.desc; body.appendChild(p);
+        }
+
+        // meta (favicon + domain)
+        const meta = document.createElement('div'); meta.className = 'meta';
+        const fav = document.createElement('img');
+        fav.className = 'favicon';
+        fav.alt = ''; // decorative
+        fav.loading = 'lazy';
+        fav.src = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
+        fav.onerror = ()=>{ fav.style.display='none'; };
+        const spanDomain = document.createElement('span'); spanDomain.textContent = domain;
+        meta.appendChild(fav); meta.appendChild(spanDomain);
+        body.appendChild(meta);
+
+        // icon external
+        const ext = document.createElement('div'); ext.className = 'ext';
+        ext.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3ZM5 5h6v2H7v10h10v-4h2v6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6c0-.55.45-1 1-1Z"/></svg>';
+        a.appendChild(ext);
+
+        a.appendChild(body);
+        websitesGrid.appendChild(a);
+      });
+
+      // gắn tilt cho card mới
+      const isTouch = matchMedia('(pointer: coarse)').matches;
+      if(!isTouch){
+        websitesGrid.querySelectorAll('.tilt').forEach(el=>{
+          el.addEventListener('mousemove', (e)=>{
+            const r = el.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width;
+            const y = (e.clientY - r.top) / r.height;
+            const rx = (0.5 - y) * 6;
+            const ry = (x - 0.5) * 8;
+            el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
+          });
+          el.addEventListener('mouseleave', ()=> el.style.transform = '');
+        });
+      }
+    }
+
+    // ===== Render Posts =====
+    const postsGrid = document.getElementById('posts-grid');
+    const emptyMsg = document.getElementById('posts-empty');
+    const searchInput = document.getElementById('post-search');
+    const tagChips = document.getElementById('tag-chips');
+    const sortSelect = document.getElementById('sort-select');
+    const toggleDrafts = document.getElementById('toggle-drafts');
+
+    let activeTag = null;
+
+    function uniqueTags(posts){
+      const set = new Set();
+      posts.forEach(p => (p.tags||[]).forEach(t => set.add(t)));
+      return Array.from(set).sort((a,b)=> a.localeCompare(b,'vi'));
+    }
+
+    function formatDate(iso){
+      const d = new Date(iso + 'T00:00:00');
+      return d.toLocaleDateString('vi-VN', { year:'numeric', month:'short', day:'2-digit' });
+    }
+
+    function computeReadMins(html){
+      const text = html.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+      const words = text ? text.split(' ').length : 0;
+      return Math.max(1, Math.round(words / 220)); // 220 wpm
+    }
+
+    function applyFilters(){
+      const q = (searchInput.value || '').toLowerCase().trim();
+      const showDrafts = toggleDrafts.checked;
+
+      let list = POSTS.filter(p => showDrafts ? true : !p.draft);
+
+      if(q){
+        list = list.filter(p => {
+          const hay = (p.title + ' ' + (p.excerpt||'') + ' ' + (p.tags||[]).join(' ')).toLowerCase();
+          return hay.includes(q);
+        });
+      }
+      if(activeTag){
+        list = list.filter(p => (p.tags||[]).includes(activeTag));
+      }
+
+      const sort = sortSelect.value;
+      if(sort === 'newest') list.sort((a,b)=> b.date.localeCompare(a.date));
+      if(sort === 'oldest') list.sort((a,b)=> a.date.localeCompare(b.date));
+      if(sort === 'az') list.sort((a,b)=> a.title.localeCompare(b.title,'vi'));
+      if(sort === 'za') list.sort((a,b)=> b.title.localeCompare(a.title,'vi'));
+
+      renderPosts(list);
+    }
+
+    function renderTagChips(){
+      const tags = uniqueTags(POSTS);
+      tagChips.innerHTML = '';
+      if(!tags.length) return;
+      const all = document.createElement('button');
+      all.className = 'chip'; all.textContent = 'Tất cả';
+      all.setAttribute('aria-pressed', String(activeTag===null));
+      all.onclick = ()=>{ activeTag=null; renderTagChips(); applyFilters(); renderWebsites();
+ };
+      tagChips.appendChild(all);
+      tags.forEach(tag=>{
+        const btn = document.createElement('button');
+        btn.className = 'chip'; btn.textContent = '#' + tag;
+        btn.setAttribute('aria-pressed', String(activeTag===tag));
+        btn.onclick = ()=>{ activeTag = (activeTag===tag ? null : tag); renderTagChips(); applyFilters(); };
+        tagChips.appendChild(btn);
+      });
+    }
+
+    function renderPosts(list){
+      postsGrid.innerHTML = '';
+      if(!list.length){
+        emptyMsg.style.display = '';
+        return;
+      }
+      emptyMsg.style.display = 'none';
+
+      list.forEach(p=>{
+        const mins = computeReadMins(p.content||'');
+        const card = document.createElement('article');
+        card.className = 'post tilt';
+        card.setAttribute('data-id', p.id);
+
+        // cover
+        if(p.cover){
+          const img = document.createElement('img');
+          img.className = 'cover'; img.src = p.cover; img.alt = p.title;
+          card.appendChild(img);
+        }
+
+        const body = document.createElement('div'); body.className = 'body';
+        const h3 = document.createElement('h3'); h3.textContent = p.title; body.appendChild(h3);
+
+        const meta = document.createElement('div'); meta.className = 'meta-line';
+        meta.innerHTML = `<span>${formatDate(p.date)}</span> • <span>${mins} phút đọc</span>${p.draft ? ' • <span class="badge">NHÁP</span>' : ''}`;
+        body.appendChild(meta);
+
+        if(p.excerpt){
+          const ex = document.createElement('p'); ex.className = 'excerpt'; ex.textContent = p.excerpt; body.appendChild(ex);
+        }
+
+        const foot = document.createElement('div'); foot.className = 'footer';
+        const tags = document.createElement('div'); tags.className = 'taglist';
+        (p.tags||[]).forEach(t=>{
+          const s = document.createElement('span'); s.className = 'badge'; s.textContent = t; tags.appendChild(s);
+        });
+        const readBtn = document.createElement('button');
+        readBtn.className = 'btn'; readBtn.setAttribute('data-ripple',''); readBtn.textContent = 'Đọc';
+        readBtn.addEventListener('click', ()=> openPost(p.id));
+        foot.appendChild(tags); foot.appendChild(readBtn);
+        body.appendChild(foot);
+
+        card.appendChild(body);
+        postsGrid.appendChild(card);
+      });
+
+      // re-attach tilt handlers for new cards
+      if(!isTouch){
+        postsGrid.querySelectorAll('.tilt').forEach(el=>{
+          el.addEventListener('mousemove', (e)=>{
+            const r = el.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width;
+            const y = (e.clientY - r.top) / r.height;
+            const rx = (0.5 - y) * 6;
+            const ry = (x - 0.5) * 8;
+            el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
+          });
+          el.addEventListener('mouseleave', ()=> el.style.transform = '');
+        });
+      }
+    }
+
+    // Initial render
+    renderTagChips();
+    applyFilters();
+    renderWebsites(); // <-- thêm để Websites hiển thị ngay khi tải trang
+    searchInput.addEventListener('input', applyFilters);
+    sortSelect.addEventListener('change', applyFilters);
+    toggleDrafts.addEventListener('change', applyFilters);
+
+    // ===== Modal logic =====
+    const modal = document.getElementById('post-modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalTitle = document.getElementById('modal-title');
+    const modalCover = document.getElementById('modal-cover');
+    const modalMeta  = document.getElementById('modal-meta');
+    const modalHtml  = document.getElementById('modal-html');
+    const modalProgress = document.getElementById('modal-progress');
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+
+    function openPost(id){
+      const p = POSTS.find(x=>x.id===id);
+      if(!p) return;
+      modalTitle.textContent = p.title;
+      modalCover.src = p.cover || '';
+      modalCover.style.display = p.cover ? '' : 'none';
+      const mins = computeReadMins(p.content||'');
+      modalMeta.textContent = `${formatDate(p.date)} • ${mins} phút đọc ${p.draft ? '• Bản nháp' : ''}`;
+      modalHtml.innerHTML = p.content || '<p>(Chưa có nội dung)</p>';
+      modal.classList.add('open');
+      document.body.style.overflow='hidden';
+
+      // progress on scroll
+      const scroller = modal.querySelector('.modal-card');
+      const update = ()=>{
+        const max = scroller.scrollHeight - scroller.clientHeight;
+        const ratio = max>0 ? scroller.scrollTop / max : 0;
+        modalProgress.style.transform = `scaleX(${ratio})`;
+      };
+      scroller.addEventListener('scroll', update, {passive:true});
+      update();
+
+      // deep link
+      history.replaceState(null,'', `#post-${id}`);
+      copyLinkBtn.onclick = ()=>{
+        const url = location.href;
+        navigator.clipboard?.writeText(url).then(()=>toast('Đã copy link bài viết'));
+      };
+    }
+    function closePost(){
+      modal.classList.remove('open');
+      document.body.style.overflow='';
+      modalProgress.style.transform = 'scaleX(0)';
+      // remove hash if it matches a post
+      if(location.hash.startsWith('#post-')) history.replaceState(null,'', location.pathname + location.search);
+    }
+    modalClose.addEventListener('click', closePost);
+    modal.addEventListener('click', (e)=> { if(e.target === modal) closePost(); });
+    document.addEventListener('keydown', (e)=> { if(e.key==='Escape' && modal.classList.contains('open')) closePost(); });
+
+    // Open by hash (#post-id)
+    if(location.hash.startsWith('#post-')){
+      const id = location.hash.replace('#post-','');
+      setTimeout(()=> openPost(id), 0);
+    }
+
+    // ===== Anti DevTools & Right-click =====
+    (function antiDevTools(){
+      // Bypass cho chủ web khi cần debug: thêm ?dev=1 vào URL
+      const bypass = /[?&]dev=1(?:&|$)/.test(location.search);
+      if (bypass) return;
+
+      const overlay = document.getElementById('devtools-overlay');
+      const okBtn = document.getElementById('devtools-ok');
+
+      const warnMsg = 'Tính làm kaito kid à cưng?';
+      const notify = (m)=>{
+        if (typeof toast === 'function') toast(m); else alert(m);
+      };
+
+      // 1) Chặn chuột phải + cảnh báo
+      window.addEventListener('contextmenu', (e)=>{
+        e.preventDefault();
+        notify(warnMsg);
+      });
+
+      // 2) Chặn phím tắt mở DevTools / View source / Save / Print ...
+      const blockKeys = (e)=>{
+        const k = (e.key || '').toUpperCase();
+        const ctrlOrMeta = e.ctrlKey || e.metaKey;
+
+        const hit = (
+          k === 'F12' ||                                     // F12
+          (e.ctrlKey && e.shiftKey && ['I','C','J','K'].includes(k)) ||  // Ctrl+Shift+I/C/J/K
+          (e.metaKey && e.altKey && ['I','J','C'].includes(k)) ||        // ⌘+⌥+I/J/C
+          (ctrlOrMeta && ['U','S','P'].includes(k))                       // Ctrl/⌘+U/S/P
+        );
+        if (hit) {
+          e.preventDefault();
+          e.stopPropagation();
+          notify(warnMsg);
+          showOverlay();
+          return false;
+        }
+      };
+      // Dùng capture để đón phím trước các handler khác
+      document.addEventListener('keydown', blockKeys, true);
+
+      // 3) Heuristic phát hiện DevTools đang mở (không tuyệt đối)
+      let opened = false;
+      const checkDevtools = ()=>{
+        const THRESH = 160; // chênh lệch kích thước khung cửa sổ ~ panel devtools
+        const w = window.outerWidth - window.innerWidth;
+        const h = window.outerHeight - window.innerHeight;
+        const isOpen = (w > THRESH) || (h > THRESH);
+        if (isOpen && !opened){ opened = true; showOverlay(); notify(warnMsg); }
+        else if (!isOpen && opened){ opened = false; hideOverlay(); }
+      };
+      setInterval(checkDevtools, 1000);
+      window.addEventListener('resize', checkDevtools);
+
+      function showOverlay(){ overlay?.classList.add('open'); }
+      function hideOverlay(){ overlay?.classList.remove('open'); }
+      okBtn?.addEventListener('click', hideOverlay);
+    })();
+  </script>
+</body>
+</html>
