@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>sybau gruop - breaking news</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-soft: #0b1020;
+      --accent: #ff4d4f;
+      --accent-soft: rgba(255, 77, 79, 0.15);
+      --accent-strong: #ff7875;
+      --text: #f5f5ff;
+      --text-soft: #a8b2d1;
+      --border: #1f2435;
+      --card: #101425;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.55);
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+      --trans-fast: 0.18s ease-out;
+      --trans-med: 0.28s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f1f3a 0, #050816 45%, #02030a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body.blurred #app-root {
+      filter: blur(4px);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ======= HEADER ======= */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to right,
+        rgba(5,8,22,0.96),
+        rgba(10,15,40,0.96)
+      );
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .header-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 15%, #ffffff 0, #ffccc7 30%, #ff4d4f 65%, #1f1f3a 100%);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.12),
+                  0 14px 30px rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    #site-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #050816;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--text-soft);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      border-radius: var(--radius-pill);
+      padding: 8px 16px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), #ff9f7a);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(255, 85, 85, 0.55);
+      transition: transform var(--trans-fast), box-shadow var(--trans-fast), filter var(--trans-fast);
+      white-space: nowrap;
+    }
+
+    .btn-primary span.icon {
+      font-size: 16px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(255, 85, 85, 0.55);
+      filter: brightness(1.05);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 24px rgba(255, 85, 85, 0.4);
+      filter: brightness(0.97);
+    }
+
+    /* ======= LAYOUT ======= */
+    .page {
+      max-width: 1160px;
+      margin: 18px auto 90px;
+      padding: 0 18px 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(260px, 1.4fr);
+      gap: 22px;
+    }
+
+    @media (max-width: 960px) {
+      .page {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      margin-bottom: 22px;
+      padding: 18px 18px 16px;
+      border-radius: var(--radius-xl);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.06) 0, transparent 40%),
+                  radial-gradient(circle at 100% 0, rgba(255,77,79,0.35) 0, transparent 55%),
+                  var(--bg-soft);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 85% 0, rgba(255,255,255,0.12) 0, transparent 55%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px 4px 5px;
+      border-radius: var(--radius-pill);
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-soft);
+    }
+
+    .live-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 40% 30%, #fff 0, #ff4d4f 45%, #870000 100%);
+      box-shadow: 0 0 0 0 rgba(255,77,79,0.7);
+      animation: pulse 1.4s ease-out infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,77,79,0.7); }
+      70% { box-shadow: 0 0 0 14px rgba(255,77,79,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,77,79,0); }
+    }
+
+    .hero-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero-subtext {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .hero-bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-meta {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .hero-badge {
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(2, 6, 23, 0.9);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    /* ===== ARTICLES LIST ===== */
+    .card-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .article-card {
+      display: grid;
+      grid-template-columns: 190px minmax(0,1fr);
+      gap: 14px;
+      padding: 12px;
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.05) 0, transparent 45%),
+                  radial-gradient(circle at 100% 0, rgba(255,77,79,0.22) 0, transparent 60%),
+                  var(--card);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--trans-med), box-shadow var(--trans-med), border-color var(--trans-med);
+    }
+
+    .article-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(255,255,255,0.0), rgba(255,255,255,0.06));
+      mix-blend-mode: screen;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease-out;
+    }
+
+    .article-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 46px rgba(0,0,0,0.75);
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .article-card:hover::after {
+      opacity: 1;
+    }
+
+    @media (max-width: 720px) {
+      .article-card {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .article-thumb {
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      min-height: 120px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      isolation: isolate;
+    }
+
+    .article-thumb::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5,8,22,0.8), transparent);
+      mix-blend-mode: multiply;
+    }
+
+    .article-category {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(2,6,23,0.92);
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .article-main {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .article-title {
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color var(--trans-fast);
+    }
+
+    .article-title:hover {
+      color: var(--accent-strong);
+    }
+
+    .article-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .article-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .article-excerpt {
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .author-block {
+      display: flex;
+      align-items: center;
+      margin-top: 4px;
+      gap: 8px;
+    }
+
+    .author-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #fff 0, #bae7ff 22%, #0050b3 60%, #001529 100%);
+      border: 1px solid rgba(255,255,255,0.4);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.6);
+    }
+
+    .author-name {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .card-footer {
+      margin-top: 6px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-readmore {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(5,7,25,0.9);
+      color: var(--text-soft);
+      font-size: 12px;
+      padding: 5px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background var(--trans-fast), color var(--trans-fast), transform var(--trans-fast), border-color var(--trans-fast);
+    }
+
+    .btn-readmore:hover {
+      background: rgba(16,22,58,0.95);
+      border-color: rgba(255,255,255,0.5);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    /* ===== PAGINATION ===== */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .page-btn {
+      min-width: 34px;
+      height: 34px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(2,6,23,0.92);
+      color: var(--text-soft);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      transition: background var(--trans-fast), color var(--trans-fast), transform var(--trans-fast), border-color var(--trans-fast);
+    }
+
+    .page-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.32);
+      color: var(--text);
+    }
+
+    .page-btn.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(255,77,79,0.7);
+    }
+
+    .page-btn[disabled] {
+      opacity: 0.4;
+      cursor: default;
+      transform: none;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .widget {
+      padding: 14px;
+      border-radius: var(--radius-xl);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.05) 0, transparent 45%),
+                  var(--bg-soft);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .widget-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 10px;
+      color: var(--text-soft);
+    }
+
+    .widget-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 12px;
+    }
+
+    .widget-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .widget-list li {
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(10,15,35,0.9);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    /* ===== EMAIL MODAL ===== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.08) 0, transparent 40%),
+                  rgba(1,2,8,0.86);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      animation: fadeInBackdrop 0.2s ease-out;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    @keyframes fadeInBackdrop {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      border-radius: 28px;
+      background: radial-gradient(circle at 100% 0, rgba(255,77,79,0.2) 0, transparent 60%),
+                  radial-gradient(circle at 0 100%, rgba(64,169,255,0.18) 0, transparent 60%),
+                  #050816;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 26px 60px rgba(0,0,0,0.9);
+      padding: 18px 18px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.08) 0, transparent 54%);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .modal-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-header-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .modal-tag {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(3,7,30,0.96);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 12px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(5,9,30,0.96);
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      color: var(--text-soft);
+      font-size: 14px;
+      padding: 3px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 10px;
+    }
+
+    .form-grid > div:nth-child(3),
+    .form-grid > div:nth-child(4) {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(5,5,20,0.96);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: border-color var(--trans-fast), box-shadow var(--trans-fast), background var(--trans-fast);
+      margin-top: 4px;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(255,77,79,0.5);
+      background: #020314;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      flex-wrap: wrap;
+    }
+
+    .btn-ghost {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 7px 12px;
+      background: rgba(3,6,28,0.96);
+      color: var(--text-soft);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--trans-fast), border-color var(--trans-fast), color var(--trans-fast), transform var(--trans-fast);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(12,18,60,0.96);
+      border-color: rgba(255,255,255,0.4);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    /* ===== WARNING OVERLAY ===== */
+    .inspect-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 0, rgba(255,255,255,0.1) 0, transparent 50%),
+                  radial-gradient(circle at 100% 0, rgba(255,77,79,0.35) 0, transparent 55%),
+                  rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      backdrop-filter: blur(16px);
+      animation: fadeInBackdrop 0.2s ease-out;
+    }
+
+    .inspect-overlay.active {
+      display: flex;
+    }
+
+    .inspect-modal {
+      max-width: 420px;
+      width: 100%;
+      padding: 20px 18px 16px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.18) 0, transparent 45%),
+                  #050816;
+      box-shadow: 0 26px 60px rgba(0,0,0,0.95);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: popIn 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    }
+
+    .inspect-modal::after {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background-image: radial-gradient(circle at 50% 0, rgba(255,255,255,0.18) 0, transparent 55%);
+      mix-blend-mode: soft-light;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: translateY(12px) scale(0.9); }
+      80% { opacity: 1; transform: translateY(0) scale(1.02); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .inspect-icon {
+      font-size: 40px;
+      margin-bottom: 4px;
+      animation: inspectorBlink 1.8s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes inspectorBlink {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .inspect-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .inspect-message {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .inspect-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .inspect-subnote {
+      margin-top: 8px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== ARTICLE DETAIL OVERLAY (BỐ CỤC DỄ ĐỌC) ===== */
+    .detail-backdrop {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.06) 0, transparent 40%),
+                  rgba(1,2,8,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      animation: fadeInBackdrop 0.2s ease-out;
+    }
+
+    .detail-backdrop.active {
+      display: flex;
+    }
+
+    .detail-modal {
+      width: 100%;
+      max-width: 860px;
+      max-height: 90vh;
+      border-radius: 28px;
+      background: radial-gradient(circle at 100% 0, rgba(255,77,79,0.18) 0, transparent 60%),
+                  radial-gradient(circle at 0 100%, rgba(64,169,255,0.18) 0, transparent 65%),
+                  #050816;
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 28px 70px rgba(0,0,0,0.95);
+      padding: 18px 18px 18px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+    }
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .detail-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .detail-meta {
+      font-size: 12px;
+      color: var(--text-soft);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .detail-image {
+      margin-top: 10px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #02030c;
+    }
+
+    .detail-image img {
+      width: 100%;
+      height: auto;
+      max-height: 420px;
+      object-fit: contain;   /* ảnh không bị cắt, fit trong khung */
+      display: block;
+    }
+
+    .detail-body {
+      margin-top: 12px;
+      font-size: 15px;
+      color: var(--text-soft);
+      line-height: 1.7;
+      overflow-y: auto;
+      padding-right: 6px;
+      padding-bottom: 4px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 12px;
+    }
+
+    .detail-body p + p {
+      margin-top: 10px;
+    }
+
+    .detail-close {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(5,8,28,0.96);
+      color: var(--text-soft);
+      font-size: 13px;
+      cursor: pointer;
+      padding: 6px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--trans-fast), color var(--trans-fast), transform var(--trans-fast), border-color var(--trans-fast);
+      white-space: nowrap;
+    }
+
+    .detail-close:hover {
+      background: rgba(18,24,60,0.96);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.64);
+      transform: translateY(-1px);
+    }
+
+    .detail-footer {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* ===== MUSIC BAR ===== */
+    .music-bar {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 12px;
+      width: min(900px, 94vw);
+      border-radius: 999px;
+      background: rgba(4,7,24,0.96);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.85);
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 30;
+    }
+
+    @media (max-width: 640px) {
+      .music-bar {
+        bottom: 8px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    .music-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    .music-input {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .music-input input[type="text"] {
+      font-size: 12px;
+      padding: 6px 9px;
+      border-radius: 999px;
+    }
+
+    .music-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(10,15,35,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform var(--trans-fast), background var(--trans-fast), color var(--trans-fast), border-color var(--trans-fast);
+    }
+
+    .btn-circle:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.6);
+      color: var(--text);
+      background: rgba(15,23,52,0.96);
+    }
+
+    audio {
+      display: none;
+    }
+
+    .music-hint {
+      font-size: 10px;
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    #music-iframe {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Overlay cảnh báo soi code -->
+  <div class="inspect-overlay" id="inspect-overlay">
+    <div class="inspect-modal">
+      <div class="inspect-icon">🕵️</div>
+      <div class="inspect-title">Soi code bố à con</div>
+      <div class="inspect-message">
+        Đang vào bếp mà bật đèn sáng trưng thế này là bị phát hiện rồi nha!<br />
+        Đừng cố mở F12, Ctrl+U hay chuột phải nữa kẻo lộ bí kíp của sybau gruop - breaking news.
+      </div>
+      <div class="inspect-actions">
+        <button class="btn-primary" id="inspect-ok-btn">
+          <span class="icon">👌</span>
+          <span>Dạ không</span>
+        </button>
+      </div>
+      <div class="inspect-subnote">Nhấn "Dạ không" để quay lại đọc báo bình thường.</div>
+    </div>
+  </div>
+
+  <!-- Modal gửi email -->
+  <div class="modal-backdrop" id="email-modal">
+    <div class="modal">
+      <button class="modal-close" id="email-close-btn" title="Đóng">
+        <span>✕</span>
+        <span>Đóng</span>
+      </button>
+      <div class="modal-inner">
+        <div class="modal-header-line">
+          <div class="modal-title">Gửi email cho tòa soạn</div>
+          <div class="modal-tag">CONTACT • EDITOR</div>
+        </div>
+        <div class="modal-desc">
+          Điền thông tin bên dưới, sau đó hệ thống sẽ tự động mở Gmail ở tab mới với nội dung đã được soạn sẵn cho bạn kiểm tra.
+        </div>
+        <form id="email-form">
+          <div class="form-grid">
+            <div>
+              <label for="email-name">Tên của bạn</label>
+              <input type="text" id="email-name" placeholder="Ví dụ: Nguyễn Văn A" required />
+            </div>
+            <div>
+              <label for="email-from">Email liên hệ của bạn</label>
+              <input type="email" id="email-from" placeholder="you@example.com" required />
+            </div>
+            <div>
+              <label for="email-subject">Tiêu đề</label>
+              <input type="text" id="email-subject" placeholder="Góp ý / Gửi tin nóng / Hợp tác..." required />
+            </div>
+            <div>
+              <label for="email-body">Nội dung</label>
+              <textarea id="email-body" placeholder="Nội dung chi tiết bạn muốn gửi..." required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div>Thông tin sẽ được điền sẵn trong Gmail • Bạn vẫn có thể sửa lại trước khi bấm Gửi.</div>
+            <button type="submit" class="btn-primary">
+              <span class="icon">✉️</span>
+              <span>Mở Gmail</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay chi tiết bài viết -->
+  <div class="detail-backdrop" id="article-detail-overlay">
+    <div class="detail-modal">
+      <div class="detail-inner">
+        <div class="detail-header">
+          <div style="flex:1; min-width:0;">
+            <div class="detail-title" id="detail-title"></div>
+            <div class="detail-meta" id="detail-meta"></div>
+          </div>
+          <button class="detail-close" id="detail-close-btn">
+            <span>✕</span>
+            <span>Đóng</span>
+          </button>
+        </div>
+        <div class="detail-image" id="detail-image-wrapper">
+          <img id="detail-image" src="" alt="Ảnh bài viết" />
+        </div>
+        <div class="detail-body" id="detail-body"></div>
+        <div class="detail-footer">
+          <div id="detail-author"></div>
+          <div>Nhấn ESC hoặc “Đóng” để quay lại danh sách.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="app-root">
+    <header>
+      <div class="header-inner">
+        <div class="brand">
+          <div class="logo-wrapper">
+            <div id="site-logo">S</div>
+          </div>
+          <div class="brand-text">
+            <div class="brand-title">SYBAU GRUOP</div>
+            <div class="brand-subtitle">BREAKING NEWS • LIVE 24/7</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <div class="pill">
+            <span style="width:9px; height:9px; border-radius:50%; background:radial-gradient(circle at 30% 20%, #fff 0, #73d13d 38%, #135200 100%); box-shadow:0 0 0 4px rgba(135,208,104,0.24);"></span>
+            <span>ON AIR</span>
+          </div>
+          <button class="btn-primary" id="open-email-btn">
+            <span class="icon">✉️</span>
+            <span>Gửi email</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <section>
+        <div class="hero">
+          <div class="hero-top">
+            <div class="live-pill">
+              <div class="live-dot"></div>
+              BREAKING LIVE
+            </div>
+            <div>
+              <div class="hero-title">sybau gruop - breaking news</div>
+              <div class="hero-subtext">
+                Tin nóng, nhanh, chuẩn – cập nhật liên tục từng phút, dành riêng cho bạn.
+              </div>
+            </div>
+          </div>
+          <div class="hero-bottom">
+            <div class="hero-meta">
+              Cập nhật theo thời gian thực • Nội dung demo chỉnh sửa ngay trong code.
+            </div>
+            <div class="hero-badge">CODE-ONLY CMS</div>
+          </div>
+        </div>
+
+        <div class="card-list" id="articles-container"></div>
+        <div class="pagination" id="pagination-container"></div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="widget">
+          <div class="widget-title">Bảng tin nhanh</div>
+          <div class="widget-badge">
+            <span>⚡</span>
+            <span>REAL-TIME SNAPSHOT</span>
+          </div>
+          <ul class="widget-list" id="widget-latest"></ul>
+        </div>
+
+        <div class="widget">
+          <div class="widget-title">Hướng dẫn chỉnh sửa</div>
+          <ul class="widget-list">
+            <li>Mở file <strong>index.html</strong> → tìm đoạn <code>const articles = [...];</code>.</li>
+            <li>Thêm, xóa, sửa bài bằng cách chỉnh object trong mảng <code>articles</code>.</li>
+            <li>Ảnh thumbnail: chỉnh trường <code>image</code> (có thể dùng link ảnh online).</li>
+            <li>Logo, avatar: sửa phần <code>#site-logo</code> và <code>.author-avatar</code> trong HTML/CSS.</li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Thanh nghe nhạc nền -->
+  <div class="music-bar">
+    <div class="music-label">Music background</div>
+    <div class="music-input">
+      <input type="text" id="music-url" placeholder="Dán link nhạc (YouTube / SoundCloud / link .mp3...)" />
+      <button class="btn-ghost" id="music-load-btn" type="button">
+        <span>▶️</span>
+        <span>Phát</span>
+      </button>
+    </div>
+    <div class="music-controls">
+      <button class="btn-circle" id="music-play-btn" title="Bắt đầu / Tiếp tục">▶</button>
+      <button class="btn-circle" id="music-pause-btn" title="Tạm dừng">⏸</button>
+      <button class="btn-circle" id="music-stop-btn" title="Tắt nhạc">⏹</button>
+      <button class="btn-circle" id="music-seek-btn" title="Tua nhanh 10s">⏩</button>
+    </div>
+    <div class="music-hint">
+      YouTube / SoundCloud sẽ phát ẩn trong nền, không mở tab mới.
+    </div>
+    <audio id="bg-audio"></audio>
+    <iframe id="music-iframe" allow="autoplay"></iframe>
+  </div>
+
+  <script>
+    /* ===== DỮ LIỆU BÀI VIẾT (giữ nguyên như bản trước) ===== */
+    const articles = [
+      {
+        title: "sybau gruop chặn đứng tin giả với nền tảng breaking news hoàn toàn mới",
+        category: "Công nghệ",
+        date: "12/11/2025",
+        time: "09:45",
+        author: "SyBau Team",
+        image: "https://images.pexels.com/photos/8101501/pexels-photo-8101501.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Nền tảng tin nhanh được xây dựng với triết lý: gọn nhẹ, minh bạch, chỉnh sửa trực tiếp trong code – tránh phụ thuộc CMS phức tạp.",
+        fullContent: [
+          "Nền tảng breaking news của sybau gruop được thiết kế cho các team nhỏ, muốn kiểm soát tối đa mọi thứ bằng code mà không cần backend phức tạp.",
+          "Mỗi bài viết chỉ là một object trong mảng JavaScript. Bạn có thể thêm, sửa, xóa bằng cách thay đổi trực tiếp nội dung trong file index.html.",
+          "Cách tiếp cận này loại bỏ nhiều lớp trung gian, giúp tốc độ tải nhanh, dễ deploy lên bất kỳ dịch vụ hosting tĩnh nào."
+        ]
+      },
+      {
+        title: "Tin nóng: xu hướng làm báo online 2025 – tốc độ, trải nghiệm và bảo mật",
+        category: "Breaking",
+        date: "12/11/2025",
+        time: "08:30",
+        author: "SyBau Desk",
+        image: "https://images.pexels.com/photos/3944454/pexels-photo-3944454.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Việc tối ưu giao diện và tốc độ tải đang trở thành cuộc đua mới giữa các tòa soạn số.",
+        fullContent: [
+          "Người đọc ngày nay không chấp nhận những trang tin tải chậm, khó đọc hoặc đầy quảng cáo che mắt.",
+          "Trong bối cảnh đó, các tòa soạn online buộc phải tối ưu cả front-end lẫn hạ tầng để giữ chân độc giả.",
+          "sybau gruop hướng đến việc loại bỏ mọi chi tiết rườm rà, tập trung vào trải nghiệm đọc mượt mà, rõ ràng."
+        ]
+      },
+      {
+        title: "Phóng sự: khi dev trở thành nhà báo – code cũng có thể kể chuyện",
+        category: "Feature",
+        date: "11/11/2025",
+        time: "21:10",
+        author: "Code Reporter",
+        image: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Thay vì sử dụng hệ quản trị nội dung nặng nề, nhiều dev chọn cách kể chuyện bằng những dòng code thuần HTML, CSS, JS.",
+        fullContent: [
+          "Một bài báo không nhất thiết phải nằm trong một hệ quản trị nội dung đồ sộ.",
+          "Đối với nhiều developer, việc kể chuyện trực tiếp bằng HTML, CSS, JS lại mang đến sự linh hoạt và cảm hứng sáng tạo riêng.",
+          "Bạn hoàn toàn có thể tạo hiệu ứng, bố cục, nhịp điệu đọc… tất cả chỉ bằng code."
+        ]
+      },
+      {
+        title: "Đằng sau hiệu ứng mờ màn hình khi bạn bấm F12 trên sybau gruop",
+        category: "Behind the scenes",
+        date: "11/11/2025",
+        time: "19:00",
+        author: "Front-end Lab",
+        image: "https://images.pexels.com/photos/1591060/pexels-photo-1591060.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Một lớp overlay, chút animation và thông điệp vui: \"Soi code bố à con\" – đủ khiến mọi tay nhanh tay chậm phải bật cười.",
+        fullContent: [
+          "Hệ thống không nhằm mục tiêu ngăn 100% việc soi code – điều đó là bất khả thi trên web.",
+          "Thay vào đó, chúng tôi chọn một cách tiếp cận vui nhộn: cho bạn một thông điệp hài hước khi mở DevTools hoặc chuột phải.",
+          "Một chút cá tính giúp trang tin trở nên đáng nhớ hơn trong mắt độc giả kỹ thuật."
+        ]
+      },
+      {
+        title: "Email-first: vì sao tòa soạn vẫn thích bạn gửi mail hơn là chat?",
+        category: "Opinion",
+        date: "10/11/2025",
+        time: "15:22",
+        author: "Editorial Board",
+        image: "https://images.pexels.com/photos/261706/pexels-photo-261706.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Email vẫn là kênh quan trọng để xác minh nguồn tin, lưu trữ lịch sử trao đổi và làm việc chuyên nghiệp với cộng tác viên.",
+        fullContent: [
+          "Email cho phép lưu trữ lâu dài, tìm kiếm lại và forward dễ dàng cho các bộ phận liên quan.",
+          "Khi xử lý nguồn tin, việc có lịch sử thư từ rõ ràng giúp tòa soạn đảm bảo tính minh bạch và bảo vệ nguồn.",
+          "Vì vậy, nút gửi email trên sybau gruop được thiết kế cực nhanh: click một phát, Gmail mở sẵn, chỉ việc bấm Gửi."
+        ]
+      },
+      {
+        title: "Thiết kế giao diện: làm sao để trang tin vừa đẹp vừa dễ đọc?",
+        category: "Design",
+        date: "09/11/2025",
+        time: "18:05",
+        author: "UX Studio",
+        image: "https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Màu nền tối, chữ sáng, card bo tròn, đổ bóng nhẹ và phân cấp rõ ràng giúp mắt người đọc được nghỉ ngơi.",
+        fullContent: [
+          "Thiết kế tốt là thiết kế khiến người đọc quên mất rằng mình đang nhìn vào giao diện.",
+          "Trang tin cần phân cấp tiêu đề – đoạn – meta rõ ràng, khoảng cách hợp lý để mắt không bị mệt.",
+          "Dark mode không chỉ là phong trào, nó thực sự giúp trải nghiệm đọc tốt hơn trong môi trường ánh sáng yếu."
+        ]
+      },
+      {
+        title: "Nhạc nền và trải nghiệm đọc báo: nên hay không?",
+        category: "Lifestyle",
+        date: "08/11/2025",
+        time: "20:10",
+        author: "SyBau Studio",
+        image: "https://images.pexels.com/photos/373945/pexels-photo-373945.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Một chút lo-fi, một chút jazz – nếu được kiểm soát hợp lý, nhạc nền có thể khiến việc đọc tin trở nên thư giãn hơn.",
+        fullContent: [
+          "Không phải ai cũng thích nhạc nền khi đọc báo, nên quan trọng là cho người dùng quyền bật/tắt.",
+          "Trên sybau gruop, bạn có thể dán bất kỳ link YouTube, SoundCloud, hoặc file audio và phát trong nền.",
+          "Âm lượng, chất lượng và lựa chọn bài hát thuộc về người đọc – trang chỉ cung cấp công cụ."
+        ]
+      },
+      {
+        title: "Top 5 thủ thuật để trang tin tĩnh vẫn “chất” như portal lớn",
+        category: "Tips",
+        date: "07/11/2025",
+        time: "13:50",
+        author: "DevTips",
+        image: "https://images.pexels.com/photos/5380661/pexels-photo-5380661.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Tối ưu hình ảnh, phân trang hợp lý, typography đẹp, màu sắc hài hòa, và một chút animation tinh tế.",
+        fullContent: [
+          "1) Nén ảnh đúng cách, 2) Hạn chế script thừa, 3) Sử dụng phân trang thông minh, 4) Thiết kế typography rõ ràng, 5) Dùng animation có kiểm soát.",
+          "Bạn không cần backend lớn để có UX tốt. Một trang tĩnh được chăm chút vẫn gây ấn tượng mạnh.",
+          "sybau gruop là ví dụ cho việc tập trung vào chi tiết giao diện và trải nghiệm."
+        ]
+      },
+      {
+        title: "sybau gruop thử nghiệm mô hình nội dung chỉ chỉnh trong code",
+        category: "Lab",
+        date: "06/11/2025",
+        time: "10:20",
+        author: "SyBau Lab",
+        image: "https://images.pexels.com/photos/1181243/pexels-photo-1181243.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Không database, không backend, mọi thứ được quản lý bằng một file HTML duy nhất."
+      },
+      {
+        title: "Khi developer trở thành editor-in-chief của tòa soạn",
+        category: "Story",
+        date: "05/11/2025",
+        time: "22:02",
+        author: "Dev Editor",
+        image: "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Quyết định cấu trúc nội dung, tốc độ tải, và trải nghiệm người dùng nằm ngay trong tay dev."
+      },
+      {
+        title: "Dark mode – lựa chọn mặc định cho trải nghiệm tin tức 2025",
+        category: "UX",
+        date: "04/11/2025",
+        time: "16:40",
+        author: "UX Studio",
+        image: "https://images.pexels.com/photos/374559/pexels-photo-374559.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Màn hình ít chói hơn, pin đỡ tốn hơn, và nội dung nổi bật hơn trong không gian tối."
+      },
+      {
+        title: "Tự tay dựng trang breaking news đầu tiên của bạn",
+        category: "Hướng dẫn",
+        date: "03/11/2025",
+        time: "09:00",
+        author: "SyBau Team",
+        image: "https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Chỉ cần một file HTML, một trình soạn thảo code và một chút sáng tạo."
+      },
+      {
+        title: "Bảo vệ source: vì sao chúng tôi trêu bạn khi bấm F12?",
+        category: "Fun",
+        date: "02/11/2025",
+        time: "21:21",
+        author: "Security Team",
+        image: "https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Không phải để ngăn 100% việc soi code, mà để mang lại nụ cười nhỏ cho người tò mò."
+      },
+      {
+        title: "Tối ưu phân trang: 8 bài một trang là điểm ngọt?",
+        category: "Performance",
+        date: "01/11/2025",
+        time: "14:14",
+        author: "Analytics Desk",
+        image: "https://images.pexels.com/photos/669622/pexels-photo-669622.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Không quá dài để người đọc mệt mỏi, cũng không quá ngắn để phải chuyển trang liên tục."
+      },
+      {
+        title: "Xây dựng thương hiệu sybau gruop trong mắt độc giả số",
+        category: "Branding",
+        date: "31/10/2025",
+        time: "11:11",
+        author: "Brand Studio",
+        image: "https://images.pexels.com/photos/313782/pexels-photo-313782.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Từ logo, palette màu đến giọng văn – mọi thứ đều góp phần tạo nên cá tính riêng."
+      }
+    ];
+
+    const POSTS_PER_PAGE = 8;
+    const MAX_PAGES = 10;
+    let currentPage = 1;
+
+    const articlesContainer = document.getElementById("articles-container");
+    const paginationContainer = document.getElementById("pagination-container");
+    const widgetLatest = document.getElementById("widget-latest");
+
+    const detailOverlay = document.getElementById("article-detail-overlay");
+    const detailTitle = document.getElementById("detail-title");
+    const detailMeta = document.getElementById("detail-meta");
+    const detailImage = document.getElementById("detail-image");
+    const detailBody = document.getElementById("detail-body");
+    const detailAuthor = document.getElementById("detail-author");
+    const detailCloseBtn = document.getElementById("detail-close-btn");
+
+    function openArticleDetail(index) {
+      const article = articles[index];
+      if (!article) return;
+
+      detailTitle.textContent = article.title;
+      detailMeta.innerHTML = `
+        <span>🗓 ${article.date}</span>
+        <span>⏱ ${article.time}</span>
+        <span>🏷 ${article.category}</span>
+      `;
+      detailImage.src = article.image;
+      detailImage.alt = article.title;
+
+      detailBody.innerHTML = "";
+      if (Array.isArray(article.fullContent) && article.fullContent.length) {
+        article.fullContent.forEach(p => {
+          const el = document.createElement("p");
+          el.textContent = p;
+          detailBody.appendChild(el);
+        });
+      } else {
+        const el = document.createElement("p");
+        el.textContent = article.excerpt || "Nội dung đang được cập nhật.";
+        detailBody.appendChild(el);
+      }
+
+      detailAuthor.textContent = "Biên tập: " + (article.author || "sybau gruop team");
+
+      detailOverlay.classList.add("active");
+      document.body.classList.add("blurred");
+    }
+
+    function closeArticleDetail() {
+      detailOverlay.classList.remove("active");
+      document.body.classList.remove("blurred");
+    }
+
+    detailCloseBtn.addEventListener("click", closeArticleDetail);
+    detailOverlay.addEventListener("click", (e) => {
+      if (e.target === detailOverlay) closeArticleDetail();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (detailOverlay.classList.contains("active")) {
+          closeArticleDetail();
+        }
+      }
+    });
+
+    function renderArticles(page = 1) {
+      currentPage = page;
+      articlesContainer.innerHTML = "";
+
+      const totalPages = Math.min(
+        MAX_PAGES,
+        Math.max(1, Math.ceil(articles.length / POSTS_PER_PAGE))
+      );
+
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const start = (currentPage - 1) * POSTS_PER_PAGE;
+      const end = start + POSTS_PER_PAGE;
+      const pageArticles = articles.slice(start, end);
+
+      pageArticles.forEach((article, idxPage) => {
+        const globalIndex = start + idxPage;
+        const card = document.createElement("article");
+        card.className = "article-card";
+        card.dataset.index = globalIndex;
+
+        const thumb = document.createElement("div");
+        thumb.className = "article-thumb";
+        thumb.style.backgroundImage = `url("${article.image}")`;
+        thumb.innerHTML = `<div class="article-category">${article.category}</div>`;
+
+        const main = document.createElement("div");
+        main.className = "article-main";
+
+        const title = document.createElement("h2");
+        title.className = "article-title";
+        title.textContent = article.title;
+        title.title = "Nhấn để xem chi tiết";
+
+        const meta = document.createElement("div");
+        meta.className = "article-meta";
+        meta.innerHTML = `
+          <span>🗓 ${article.date}</span>
+          <span>⏱ ${article.time}</span>
+          <span>🏷 ${article.category}</span>
+        `;
+
+        const excerpt = document.createElement("p");
+        excerpt.className = "article-excerpt";
+        excerpt.textContent = article.excerpt;
+
+        const authorBlock = document.createElement("div");
+        authorBlock.className = "author-block";
+        authorBlock.innerHTML = `
+          <div class="author-avatar"></div>
+          <div class="author-name">Biên tập: ${article.author}</div>
+        `;
+
+        const footer = document.createElement("div");
+        footer.className = "card-footer";
+        const readBtn = document.createElement("button");
+        readBtn.className = "btn-readmore";
+        readBtn.innerHTML = '<span>Đọc tiếp</span> <span>➜</span>';
+        footer.appendChild(readBtn);
+
+        main.appendChild(title);
+        main.appendChild(meta);
+        main.appendChild(excerpt);
+        main.appendChild(authorBlock);
+        main.appendChild(footer);
+
+        card.appendChild(thumb);
+        card.appendChild(main);
+        articlesContainer.appendChild(card);
+
+        readBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          openArticleDetail(globalIndex);
+        });
+        title.addEventListener("click", (e) => {
+          e.stopPropagation();
+          openArticleDetail(globalIndex);
+        });
+      });
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      paginationContainer.innerHTML = "";
+
+      const totalPages = Math.min(
+        MAX_PAGES,
+        Math.max(1, Math.ceil(articles.length / POSTS_PER_PAGE))
+      );
+
+      if (totalPages <= 1) return;
+
+      const prevBtn = document.createElement("button");
+      prevBtn.className = "page-btn";
+      prevBtn.textContent = "‹ Trước";
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.addEventListener("click", () => renderArticles(currentPage - 1));
+      paginationContainer.appendChild(prevBtn);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.className = "page-btn" + (i === currentPage ? " active" : "");
+        btn.textContent = i;
+        btn.addEventListener("click", () => renderArticles(i));
+        paginationContainer.appendChild(btn);
+      }
+
+      const nextBtn = document.createElement("button");
+      nextBtn.className = "page-btn";
+      nextBtn.textContent = "Sau ›";
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.addEventListener("click", () => renderArticles(currentPage + 1));
+      paginationContainer.appendChild(nextBtn);
+    }
+
+    function renderLatestWidget() {
+      widgetLatest.innerHTML = "";
+      const latest = articles.slice(0, 5);
+      latest.forEach((a) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${a.title}</strong><br/><span style="font-size:11px; color:#8088a2;">${a.date} • ${a.category}</span>`;
+        widgetLatest.appendChild(li);
+      });
+    }
+
+    /* ===== EMAIL FORM → GMAIL TAB MỚI ===== */
+    const emailModal = document.getElementById("email-modal");
+    const openEmailBtn = document.getElementById("open-email-btn");
+    const emailCloseBtn = document.getElementById("email-close-btn");
+    const emailForm = document.getElementById("email-form");
+
+    const ADMIN_EMAIL = "thanhdamphu24@gmail.com";
+
+    function openEmailModal() {
+      emailModal.classList.add("active");
+    }
+
+    function closeEmailModal() {
+      emailModal.classList.remove("active");
+    }
+
+    openEmailBtn.addEventListener("click", openEmailModal);
+    emailCloseBtn.addEventListener("click", closeEmailModal);
+
+    emailModal.addEventListener("click", (e) => {
+      if (e.target === emailModal) closeEmailModal();
+    });
+
+    emailForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("email-name").value.trim();
+      const fromEmail = document.getElementById("email-from").value.trim();
+      const subject = document.getElementById("email-subject").value.trim();
+      const body = document.getElementById("email-body").value.trim();
+
+      const fullSubject = `[sybau gruop - breaking news] ${subject}`;
+      const fullBody =
+        `Họ tên: ${name}\n` +
+        `Email liên hệ: ${fromEmail}\n\n` +
+        `Nội dung:\n${body}\n\n---\nĐược gửi từ trang sybau gruop - breaking news.`;
+
+      const url =
+        "https://mail.google.com/mail/?view=cm&fs=1&to=" +
+        encodeURIComponent(ADMIN_EMAIL) +
+        "&su=" +
+        encodeURIComponent(fullSubject) +
+        "&body=" +
+        encodeURIComponent(fullBody);
+
+      window.open(url, "_blank");
+      closeEmailModal();
+    });
+
+    /* ===== CHẶN F12 / CTRL+U / CHUỘT PHẢI ===== */
+    const inspectOverlay = document.getElementById("inspect-overlay");
+    const inspectOkBtn = document.getElementById("inspect-ok-btn");
+
+    function showInspectWarning() {
+      document.body.classList.add("blurred");
+      inspectOverlay.classList.add("active");
+    }
+
+    function hideInspectWarning() {
+      document.body.classList.remove("blurred");
+      inspectOverlay.classList.remove("active");
+    }
+
+    inspectOkBtn.addEventListener("click", hideInspectWarning);
+
+    document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      showInspectWarning();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "F12" ||
+        e.keyCode === 123 ||
+        (e.ctrlKey && (e.key === "u" || e.key === "U")) ||
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "i"))
+      ) {
+        e.preventDefault();
+        showInspectWarning();
+      }
+    });
+
+    /* ===== MUSIC BAR ===== */
+    const musicUrlInput = document.getElementById("music-url");
+    const musicLoadBtn = document.getElementById("music-load-btn");
+    const playBtn = document.getElementById("music-play-btn");
+    const pauseBtn = document.getElementById("music-pause-btn");
+    const stopBtn = document.getElementById("music-stop-btn");
+    const seekBtn = document.getElementById("music-seek-btn");
+    const bgAudio = document.getElementById("bg-audio");
+    const musicIframe = document.getElementById("music-iframe");
+
+    let musicMode = null;
+    let lastEmbedUrl = "";
+
+    function isYouTube(url) {
+      return /youtube\.com|youtu\.be/.test(url);
+    }
+
+    function isSoundCloud(url) {
+      return /soundcloud\.com/.test(url);
+    }
+
+    function buildYouTubeEmbed(url) {
+      try {
+        let videoId = "";
+        const ytShort = url.match(/youtu\.be\/([^?&]+)/);
+        const ytNormal = url.match(/[?&]v=([^&]+)/);
+        if (ytShort && ytShort[1]) videoId = ytShort[1];
+        else if (ytNormal && ytNormal[1]) videoId = ytNormal[1];
+        if (!videoId) return url;
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0`;
+      } catch {
+        return url;
+      }
+    }
+
+    function buildSoundCloudEmbed(url) {
+      return (
+        "https://w.soundcloud.com/player/?url=" +
+        encodeURIComponent(url) +
+        "&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false"
+      );
+    }
+
+    function stopIframeMusic() {
+      musicIframe.src = "";
+      lastEmbedUrl = "";
+    }
+
+    function loadMusic() {
+      const url = musicUrlInput.value.trim();
+      if (!url) return;
+
+      bgAudio.pause();
+      bgAudio.removeAttribute("src");
+
+      if (isYouTube(url) || isSoundCloud(url)) {
+        musicMode = "iframe";
+        let embedUrl = "";
+        if (isYouTube(url)) {
+          embedUrl = buildYouTubeEmbed(url);
+        } else {
+          embedUrl = buildSoundCloudEmbed(url);
+        }
+        lastEmbedUrl = embedUrl;
+        musicIframe.src = embedUrl;
+        return;
+      }
+
+      musicMode = "audio";
+      stopIframeMusic();
+      bgAudio.src = url;
+      bgAudio.play().catch(() => {});
+    }
+
+    musicLoadBtn.addEventListener("click", loadMusic);
+
+    playBtn.addEventListener("click", () => {
+      if (musicMode === "audio") {
+        if (bgAudio.src) {
+          bgAudio.play().catch(() => {});
+        } else {
+          loadMusic();
+        }
+      } else if (musicMode === "iframe") {
+        if (!lastEmbedUrl) {
+          loadMusic();
+        } else {
+          musicIframe.src = lastEmbedUrl;
+        }
+      } else {
+        loadMusic();
+      }
+    });
+
+    pauseBtn.addEventListener("click", () => {
+      if (musicMode === "audio") {
+        if (!bgAudio.paused) bgAudio.pause();
+      } else if (musicMode === "iframe") {
+        stopIframeMusic();
+      }
+    });
+
+    stopBtn.addEventListener("click", () => {
+      bgAudio.pause();
+      bgAudio.currentTime = 0;
+      stopIframeMusic();
+      musicMode = null;
+    });
+
+    seekBtn.addEventListener("click", () => {
+      if (musicMode === "audio" && bgAudio.src) {
+        bgAudio.currentTime = bgAudio.currentTime + 10;
+      }
+    });
+
+    /* ===== KHỞI TẠO ===== */
+    renderArticles(1);
+    renderLatestWidget();
+  </script>
+</body>
+</html>
