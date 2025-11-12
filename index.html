@@ -254,7 +254,59 @@
     .post .taglist{display:flex; gap:6px; flex-wrap:wrap}
     .post .excerpt{color:var(--muted); margin-top:6px}
     .tilt{transform-style:preserve-3d; perspective:900px}
-
+        /* ===== Donate / Ủng hộ ===== */
+    .donate-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:10px;
+    }
+    @media (max-width:780px){
+      .donate-grid{grid-template-columns:1fr;}
+    }
+    .donate-box{
+      display:grid;
+      grid-template-columns:120px minmax(0,1fr);
+      gap:12px;
+      align-items:center;
+      border-radius:16px;
+      padding:12px 14px;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg,var(--card),transparent);
+    }
+    .donate-qr img{
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:var(--bg-elev);
+      object-fit:cover;
+    }
+    .donate-info-title{
+      font-weight:700;
+      margin-bottom:4px;
+    }
+    .donate-lines{
+      font-size:.92rem;
+      color:var(--muted);
+    }
+    .donate-lines div{
+      margin-bottom:3px;
+    }
+    .donate-label{
+      font-weight:600;
+      color:var(--text);
+    }
+    .donate-actions{
+      margin-top:6px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .donate-small-note{
+      margin-top:10px;
+      font-size:.86rem;
+      color:var(--muted);
+    }
     /* ===== Modal bài viết ===== */
     .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45); backdrop-filter: blur(6px); z-index:1000}
     .modal.open{display:flex}
@@ -1087,3 +1139,4 @@
   </script>
 </body>
 </html>
+
