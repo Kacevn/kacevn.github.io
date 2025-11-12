@@ -776,7 +776,7 @@
         try{ document.execCommand('copy'); toast('Đã copy: ' + text); } finally { document.body.removeChild(t); }
       }
     };
-
+    
     // ===== Toggle Discord widget =====
     const widgetBtn = document.getElementById('toggle-widget');
     const widget = document.getElementById('discord-widget');
@@ -784,7 +784,36 @@
       widget.classList.toggle('open');
       widgetBtn.textContent = widget.classList.contains('open') ? 'Ẩn Widget server' : 'Hiện Widget server';
     });
+        // ===== Copy thông tin Donate (TK, nội dung...) =====
+    window.copyDonate = function(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      const text = el.textContent.trim();
+      const label = el.dataset.label || 'Thông tin';
 
+      if(!text){
+        toast('Không có dữ liệu để copy');
+        return;
+      }
+
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text)
+          .then(()=> toast(`Đã copy ${label}: ${text}`))
+          .catch(()=> toast('Không copy được, thử lại nhé!'));
+      } else {
+        // fallback
+        const t = document.createElement('textarea');
+        t.value = text;
+        document.body.appendChild(t);
+        t.select();
+        try{
+          document.execCommand('copy');
+          toast(`Đã copy ${label}: ${text}`);
+        } finally {
+          document.body.removeChild(t);
+        }
+      }
+    };
     // ===== Footer year =====
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -850,8 +879,8 @@
     // - Toàn bộ card click để mở tab mới.
     const WEBSITES = [
       {
-        title: 'KACE HUBB — Share API Script',
-        url: 'https://kacehubb.x10.bz/',
+        title: 'KACE HUB — Share API Script',
+        url: 'https://kacevn.github.io/apisource.html
         desc: 'Share API Script “siêu VIP” cho anh em developer: test nhanh, tích hợp gọn.',
         cover: 'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200'
       },
@@ -1197,5 +1226,6 @@
   </script>
 </body>
 </html>
+
 
 
