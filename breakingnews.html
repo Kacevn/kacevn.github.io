@@ -645,29 +645,21 @@
       margin-bottom: 12px;
     }
 
-    .modal-close 
-  {
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(255,255,255,0.3);
-  background: rgba(5,9,30,0.96);
-  cursor: pointer;
-  color: var(--text-soft);
-  font-size: 13px;
-  padding: 3px 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: background var(--trans-fast), border-color var(--trans-fast),
-              color var(--trans-fast), transform var(--trans-fast);
-}
-
-.modal-close:hover 
-{
-  background: rgba(18,24,60,0.96);
-  border-color: rgba(255,255,255,0.6);
-  color: var(--text);
-  transform: translateY(-1px);
-}
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(5,9,30,0.96);
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      color: var(--text-soft);
+      font-size: 14px;
+      padding: 3px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
     .form-grid {
       display: grid;
@@ -1092,54 +1084,49 @@
 
   <!-- Modal gửi email -->
   <div class="modal-backdrop" id="email-modal">
-  <div class="modal">
-    <div class="modal-inner">
-      <div class="modal-header-line">
-        <div class="modal-title">Gửi email cho tòa soạn</div>
-
-        <div style="display:flex; align-items:center; gap:8px;">
+    <div class="modal">
+      <button class="modal-close" id="email-close-btn" title="Đóng">
+        <span>✕</span>
+        <span>Đóng</span>
+      </button>
+      <div class="modal-inner">
+        <div class="modal-header-line">
+          <div class="modal-title">Gửi email cho tòa soạn</div>
           <div class="modal-tag">CONTACT • EDITOR</div>
-          <button class="modal-close" id="email-close-btn" title="Đóng">
-            <span>✕</span>
-            <span>Đóng</span>
-          </button>
         </div>
+        <div class="modal-desc">
+          Điền thông tin bên dưới, sau đó hệ thống sẽ tự động mở Gmail ở tab mới với nội dung đã được soạn sẵn cho bạn kiểm tra.
+        </div>
+        <form id="email-form">
+          <div class="form-grid">
+            <div>
+              <label for="email-name">Tên của bạn</label>
+              <input type="text" id="email-name" placeholder="Ví dụ: Nguyễn Văn A" required />
+            </div>
+            <div>
+              <label for="email-from">Email liên hệ của bạn</label>
+              <input type="email" id="email-from" placeholder="you@example.com" required />
+            </div>
+            <div>
+              <label for="email-subject">Tiêu đề</label>
+              <input type="text" id="email-subject" placeholder="Góp ý / Gửi tin nóng / Hợp tác..." required />
+            </div>
+            <div>
+              <label for="email-body">Nội dung</label>
+              <textarea id="email-body" placeholder="Nội dung chi tiết bạn muốn gửi..." required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div>Thông tin sẽ được điền sẵn trong Gmail • Bạn vẫn có thể sửa lại trước khi bấm Gửi.</div>
+            <button type="submit" class="btn-primary">
+              <span class="icon">✉️</span>
+              <span>Mở Gmail</span>
+            </button>
+          </div>
+        </form>
       </div>
-
-      <div class="modal-desc">
-        Điền thông tin bên dưới, sau đó hệ thống sẽ tự động mở Gmail ở tab mới với nội dung đã được soạn sẵn cho bạn kiểm tra.
-      </div>
-
-      <form id="email-form">
-        <div class="form-grid">
-          <div>
-            <label for="email-name">Tên của bạn</label>
-            <input type="text" id="email-name" placeholder="Ví dụ: Nguyễn Văn A" required />
-          </div>
-          <div>
-            <label for="email-from">Email liên hệ của bạn</label>
-            <input type="email" id="email-from" placeholder="you@example.com" required />
-          </div>
-          <div>
-            <label for="email-subject">Tiêu đề</label>
-            <input type="text" id="email-subject" placeholder="Góp ý / Gửi tin nóng / Hợp tác..." required />
-          </div>
-          <div>
-            <label for="email-body">Nội dung</label>
-            <textarea id="email-body" placeholder="Nội dung chi tiết bạn muốn gửi..." required></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <div>Thông tin sẽ được điền sẵn trong Gmail • Bạn vẫn có thể sửa lại trước khi bấm Gửi.</div>
-          <button type="submit" class="btn-primary">
-            <span class="icon">✉️</span>
-            <span>Mở Gmail</span>
-          </button>
-        </div>
-      </form>
     </div>
   </div>
-</div>
 
   <!-- Overlay chi tiết bài viết -->
   <div class="detail-backdrop" id="article-detail-overlay">
@@ -1269,32 +1256,31 @@
     /* ===== DỮ LIỆU BÀI VIẾT (giữ nguyên như bản trước) ===== */
     const articles = [
       {
-  title: "📰 SyBau Group chặn đứng tin giả với nền tảng “Breaking News” hoàn toàn mới",
-  category: "Công nghệ",
-  date: "12/11/2025",
-  time: "09:45",
-  author: "SyBau Team",
-  image: "https://sf-static.upanhlaylink.com/img/image_20251112aae3d5f824c2e3768d3856c2fd0e9c96.jpg",
-  excerpt: "SyBau Group ra mắt nền tảng Breaking News — giải pháp chống tin giả với thiết kế gọn nhẹ, minh bạch và có thể chỉnh sửa trực tiếp trong code mà không cần CMS phức tạp.",
-  fullContent: [
-    "SyBau Group vừa ra mắt nền tảng Breaking News – công cụ cập nhật tin nhanh được thiết kế để ngăn chặn tin giả và tối ưu cho các nhóm phát triển nhỏ."
-    "Nền tảng này được xây dựng trên triết lý “gọn nhẹ, minh bạch, và kiểm soát trực tiếp bằng code”, thay vì phụ thuộc vào các hệ thống CMS phức tạp."
-    "“Breaking News không chỉ là nền tảng tin tức — mà là bước tiến trong cách chúng ta xử lý và xác thực thông tin,” đại diện SyBau Group cho biết."
-  ]
-},
-
+        title: "sybau gruop chặn đứng tin giả với nền tảng breaking news hoàn toàn mới",
+        category: "Công nghệ",
+        date: "12/11/2025",
+        time: "09:45",
+        author: "SyBau Team",
+        image: "https://images.pexels.com/photos/8101501/pexels-photo-8101501.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Nền tảng tin nhanh được xây dựng với triết lý: gọn nhẹ, minh bạch, chỉnh sửa trực tiếp trong code – tránh phụ thuộc CMS phức tạp.",
+        fullContent: [
+          "Nền tảng breaking news của sybau gruop được thiết kế cho các team nhỏ, muốn kiểm soát tối đa mọi thứ bằng code mà không cần backend phức tạp.",
+          "Mỗi bài viết chỉ là một object trong mảng JavaScript. Bạn có thể thêm, sửa, xóa bằng cách thay đổi trực tiếp nội dung trong file index.html.",
+          "Cách tiếp cận này loại bỏ nhiều lớp trung gian, giúp tốc độ tải nhanh, dễ deploy lên bất kỳ dịch vụ hosting tĩnh nào."
+        ]
+      },
       {
         title: "Tin nóng: xu hướng làm báo online 2025 – tốc độ, trải nghiệm và bảo mật",
         category: "Breaking",
         date: "12/11/2025",
         time: "08:30",
         author: "SyBau Desk",
-        image: "https://sf-static.upanhlaylink.com/img/image_20251112aae3d5f824c2e3768d3856c2fd0e9c96.jpg",
+        image: "https://images.pexels.com/photos/3944454/pexels-photo-3944454.jpeg?auto=compress&cs=tinysrgb&w=1200",
         excerpt: "Việc tối ưu giao diện và tốc độ tải đang trở thành cuộc đua mới giữa các tòa soạn số.",
         fullContent: [
           "Người đọc ngày nay không chấp nhận những trang tin tải chậm, khó đọc hoặc đầy quảng cáo che mắt.",
           "Trong bối cảnh đó, các tòa soạn online buộc phải tối ưu cả front-end lẫn hạ tầng để giữ chân độc giả.",
-          "Sybau Group hướng đến việc loại bỏ mọi chi tiết rườm rà, tập trung vào trải nghiệm đọc mượt mà, rõ ràng."
+          "sybau gruop hướng đến việc loại bỏ mọi chi tiết rườm rà, tập trung vào trải nghiệm đọc mượt mà, rõ ràng."
         ]
       },
       {
@@ -1309,6 +1295,20 @@
           "Một bài báo không nhất thiết phải nằm trong một hệ quản trị nội dung đồ sộ.",
           "Đối với nhiều developer, việc kể chuyện trực tiếp bằng HTML, CSS, JS lại mang đến sự linh hoạt và cảm hứng sáng tạo riêng.",
           "Bạn hoàn toàn có thể tạo hiệu ứng, bố cục, nhịp điệu đọc… tất cả chỉ bằng code."
+        ]
+      },
+      {
+        title: "Đằng sau hiệu ứng mờ màn hình khi bạn bấm F12 trên sybau gruop",
+        category: "Behind the scenes",
+        date: "11/11/2025",
+        time: "19:00",
+        author: "Front-end Lab",
+        image: "https://images.pexels.com/photos/1591060/pexels-photo-1591060.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Một lớp overlay, chút animation và thông điệp vui: \"Soi code bố à con\" – đủ khiến mọi tay nhanh tay chậm phải bật cười.",
+        fullContent: [
+          "Hệ thống không nhằm mục tiêu ngăn 100% việc soi code – điều đó là bất khả thi trên web.",
+          "Thay vào đó, chúng tôi chọn một cách tiếp cận vui nhộn: cho bạn một thông điệp hài hước khi mở DevTools hoặc chuột phải.",
+          "Một chút cá tính giúp trang tin trở nên đáng nhớ hơn trong mắt độc giả kỹ thuật."
         ]
       },
       {
@@ -1364,8 +1364,17 @@
         fullContent: [
           "1) Nén ảnh đúng cách, 2) Hạn chế script thừa, 3) Sử dụng phân trang thông minh, 4) Thiết kế typography rõ ràng, 5) Dùng animation có kiểm soát.",
           "Bạn không cần backend lớn để có UX tốt. Một trang tĩnh được chăm chút vẫn gây ấn tượng mạnh.",
-          "Sybau Gruop là ví dụ cho việc tập trung vào chi tiết giao diện và trải nghiệm."
+          "sybau gruop là ví dụ cho việc tập trung vào chi tiết giao diện và trải nghiệm."
         ]
+      },
+      {
+        title: "sybau gruop thử nghiệm mô hình nội dung chỉ chỉnh trong code",
+        category: "Lab",
+        date: "06/11/2025",
+        time: "10:20",
+        author: "SyBau Lab",
+        image: "https://images.pexels.com/photos/1181243/pexels-photo-1181243.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Không database, không backend, mọi thứ được quản lý bằng một file HTML duy nhất."
       },
       {
         title: "Khi developer trở thành editor-in-chief của tòa soạn",
@@ -1386,12 +1395,39 @@
         excerpt: "Màn hình ít chói hơn, pin đỡ tốn hơn, và nội dung nổi bật hơn trong không gian tối."
       },
       {
+        title: "Tự tay dựng trang breaking news đầu tiên của bạn",
+        category: "Hướng dẫn",
+        date: "03/11/2025",
+        time: "09:00",
+        author: "SyBau Team",
+        image: "https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Chỉ cần một file HTML, một trình soạn thảo code và một chút sáng tạo."
+      },
+      {
+        title: "Bảo vệ source: vì sao chúng tôi trêu bạn khi bấm F12?",
+        category: "Fun",
+        date: "02/11/2025",
+        time: "21:21",
+        author: "Security Team",
+        image: "https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Không phải để ngăn 100% việc soi code, mà để mang lại nụ cười nhỏ cho người tò mò."
+      },
+      {
+        title: "Tối ưu phân trang: 8 bài một trang là điểm ngọt?",
+        category: "Performance",
+        date: "01/11/2025",
+        time: "14:14",
+        author: "Analytics Desk",
+        image: "https://images.pexels.com/photos/669622/pexels-photo-669622.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        excerpt: "Không quá dài để người đọc mệt mỏi, cũng không quá ngắn để phải chuyển trang liên tục."
+      },
+      {
         title: "Xây dựng thương hiệu sybau gruop trong mắt độc giả số",
         category: "Branding",
         date: "31/10/2025",
         time: "11:11",
         author: "Brand Studio",
-        image: "https://sf-static.upanhlaylink.com/img/image_20251112aae3d5f824c2e3768d3856c2fd0e9c96.jpg",
+        image: "https://images.pexels.com/photos/313782/pexels-photo-313782.jpeg?auto=compress&cs=tinysrgb&w=1200",
         excerpt: "Từ logo, palette màu đến giọng văn – mọi thứ đều góp phần tạo nên cá tính riêng."
       }
     ];
@@ -1790,5 +1826,3 @@
   </script>
 </body>
 </html>
-
-
