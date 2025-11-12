@@ -645,21 +645,29 @@
       margin-bottom: 12px;
     }
 
-    .modal-close {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      background: rgba(5,9,30,0.96);
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(255,255,255,0.3);
-      cursor: pointer;
-      color: var(--text-soft);
-      font-size: 14px;
-      padding: 3px 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .modal-close 
+  {
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(5,9,30,0.96);
+  cursor: pointer;
+  color: var(--text-soft);
+  font-size: 13px;
+  padding: 3px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background var(--trans-fast), border-color var(--trans-fast),
+              color var(--trans-fast), transform var(--trans-fast);
+}
+
+.modal-close:hover 
+{
+  background: rgba(18,24,60,0.96);
+  border-color: rgba(255,255,255,0.6);
+  color: var(--text);
+  transform: translateY(-1px);
+}
 
     .form-grid {
       display: grid;
@@ -1084,49 +1092,54 @@
 
   <!-- Modal gửi email -->
   <div class="modal-backdrop" id="email-modal">
-    <div class="modal">
-      <button class="modal-close" id="email-close-btn" title="Đóng">
-        <span>✕</span>
-        <span>Đóng</span>
-      </button>
-      <div class="modal-inner">
-        <div class="modal-header-line">
-          <div class="modal-title">Gửi email cho tòa soạn</div>
+  <div class="modal">
+    <div class="modal-inner">
+      <div class="modal-header-line">
+        <div class="modal-title">Gửi email cho tòa soạn</div>
+
+        <div style="display:flex; align-items:center; gap:8px;">
           <div class="modal-tag">CONTACT • EDITOR</div>
+          <button class="modal-close" id="email-close-btn" title="Đóng">
+            <span>✕</span>
+            <span>Đóng</span>
+          </button>
         </div>
-        <div class="modal-desc">
-          Điền thông tin bên dưới, sau đó hệ thống sẽ tự động mở Gmail ở tab mới với nội dung đã được soạn sẵn cho bạn kiểm tra.
-        </div>
-        <form id="email-form">
-          <div class="form-grid">
-            <div>
-              <label for="email-name">Tên của bạn</label>
-              <input type="text" id="email-name" placeholder="Ví dụ: Nguyễn Văn A" required />
-            </div>
-            <div>
-              <label for="email-from">Email liên hệ của bạn</label>
-              <input type="email" id="email-from" placeholder="you@example.com" required />
-            </div>
-            <div>
-              <label for="email-subject">Tiêu đề</label>
-              <input type="text" id="email-subject" placeholder="Góp ý / Gửi tin nóng / Hợp tác..." required />
-            </div>
-            <div>
-              <label for="email-body">Nội dung</label>
-              <textarea id="email-body" placeholder="Nội dung chi tiết bạn muốn gửi..." required></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <div>Thông tin sẽ được điền sẵn trong Gmail • Bạn vẫn có thể sửa lại trước khi bấm Gửi.</div>
-            <button type="submit" class="btn-primary">
-              <span class="icon">✉️</span>
-              <span>Mở Gmail</span>
-            </button>
-          </div>
-        </form>
       </div>
+
+      <div class="modal-desc">
+        Điền thông tin bên dưới, sau đó hệ thống sẽ tự động mở Gmail ở tab mới với nội dung đã được soạn sẵn cho bạn kiểm tra.
+      </div>
+
+      <form id="email-form">
+        <div class="form-grid">
+          <div>
+            <label for="email-name">Tên của bạn</label>
+            <input type="text" id="email-name" placeholder="Ví dụ: Nguyễn Văn A" required />
+          </div>
+          <div>
+            <label for="email-from">Email liên hệ của bạn</label>
+            <input type="email" id="email-from" placeholder="you@example.com" required />
+          </div>
+          <div>
+            <label for="email-subject">Tiêu đề</label>
+            <input type="text" id="email-subject" placeholder="Góp ý / Gửi tin nóng / Hợp tác..." required />
+          </div>
+          <div>
+            <label for="email-body">Nội dung</label>
+            <textarea id="email-body" placeholder="Nội dung chi tiết bạn muốn gửi..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div>Thông tin sẽ được điền sẵn trong Gmail • Bạn vẫn có thể sửa lại trước khi bấm Gửi.</div>
+          <button type="submit" class="btn-primary">
+            <span class="icon">✉️</span>
+            <span>Mở Gmail</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
   <!-- Overlay chi tiết bài viết -->
   <div class="detail-backdrop" id="article-detail-overlay">
@@ -1826,3 +1839,4 @@
   </script>
 </body>
 </html>
+
