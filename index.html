@@ -575,6 +575,64 @@
         <div id="posts-grid" class="posts-grid stagger" data-reveal aria-live="polite"></div>
         <p id="posts-empty" class="note" style="display:none">Không tìm thấy bài phù hợp. Hãy thử từ khóa khác hoặc bỏ lọc tag.</p>
       </section>
+            <!-- ===== DONATE / ỦNG HỘ ===== -->
+      <section id="donate" class="section card" aria-labelledby="donate-heading" data-reveal>
+        <h2 id="donate-heading">Ủng hộ tác giả</h2>
+        <p>
+          Nếu bạn thấy những dự án / bài viết này hữu ích, có thể ủng hộ mình một ly cà phê 🙌.
+          Cảm ơn rất nhiều vì đã đồng hành!
+        </p>
+
+        <div class="donate-grid">
+          <!-- MB Bank -->
+          <article class="donate-box">
+            <div class="donate-qr">
+              <!-- TODO: thay bằng ảnh QR MB Bank của bạn -->
+              <img src="https://sf-static.upanhlaylink.com/view/image_20251112da68cdc75f17ed712c7513bfd1bfc7d5.jpg" alt="QR chuyển khoản MB Bank">
+            </div>
+            <div>
+              <div class="donate-info-title">MB Bank</div>
+              <div class="donate-lines">
+                <div><span class="donate-label">Chủ TK:</span> <span id="mb-name" data-label="Tên chủ tài khoản MB">THANH NGUYEN</span></div>
+                <div><span class="donate-label">Số TK:</span> <span id="mb-account" data-label="Số tài khoản MB">0916882278</span></div>
+                <div><span class="donate-label">Nội dung:</span> <span id="mb-note" data-label="Nội dung MB">Buy me a coffee ☕</span></div>
+              </div>
+              <div class="donate-actions">
+                <button class="btn" data-ripple onclick="copyDonate('mb-account')">Sao chép số TK</button>
+                <button class="btn" data-ripple onclick="copyDonate('mb-note')">Sao chép nội dung</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- ZaloPay (hoặc Ví khác) -->
+          <article class="donate-box">
+            <div class="donate-qr">
+              <!-- TODO: thay bằng ảnh QR ZaloPay của bạn -->
+              <img src="https://sf-static.upanhlaylink.com/view/image_20251112da68cdc75f17ed712c7513bfd1bfc7d5.jpg" alt="QR chuyển khoản ZaloPay">
+            </div>
+            <div>
+              <div class="donate-info-title">ZaloPay / BVBank - NH TMCP Bản Việt</div>
+              <div class="donate-lines">
+                <div><span class="donate-label">Tên:</span> <span id="zalo-name" data-label="Tên ZaloPay">DAM PHU THANH</span></div>
+                <div><span class="donate-label">SĐT / ID:</span> <span id="zalo-account" data-label="ZaloPay">99ZP25295M37356327</span></div>
+                <div><span class="donate-label">Nội dung:</span> <span id="zalo-note" data-label="Nội dung ZaloPay">Buy me a coffee ☕</span></div>
+              </div>
+              <div class="donate-actions">
+                <button class="btn" data-ripple onclick="copyDonate('zalo-account')">Sao chép SĐT / ID</button>
+                <button class="btn" data-ripple onclick="copyDonate('zalo-note')">Sao chép nội dung</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p class="donate-small-note">
+          * 💸 +1 tín đồ ủng hộ KaceDev — cảm ơn bạn nhiều! <code>Support Kace</code>.
+        </p>
+      </section>
+
+      <!-- ===== CONTACT ===== -->
+      <section id="contact" class="section card" aria-labelledby="contact-heading" data-reveal>
+        ...
 
       <!-- ===== CONTACT ===== -->
       <section id="contact" class="section card" aria-labelledby="contact-heading" data-reveal>
@@ -1139,4 +1197,5 @@
   </script>
 </body>
 </html>
+
 
