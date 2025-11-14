@@ -27,10 +27,20 @@
     html,body{
       background:radial-gradient(1200px 500px at 20% -10%,rgba(56,189,248,.12),transparent 60%),
                  radial-gradient(900px 380px at 95% 0,rgba(34,197,94,.11),transparent 60%), var(--bg);
-      color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif
+      color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      min-height:100vh;
+    }
+    body{
+      opacity:0;
+      animation:body-fade-in .5s ease-out forwards;
+    }
+    @keyframes body-fade-in{
+      from{opacity:0;transform:translateY(6px);}
+      to{opacity:1;transform:translateY(0);}
     }
     a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
     button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+    .hidden{display:none !important;}
 
     .wrap{width:min(1180px,100%);margin:28px auto;padding:18px}
 
@@ -43,22 +53,48 @@
         linear-gradient(180deg, var(--panel), var(--panel-2));
       border:1px solid var(--line); border-radius:26px; padding:26px 22px 18px;
       box-shadow:var(--shadow); overflow:hidden;
+      animation:hero-in .6s ease-out;
+      transform-origin:top left;
+    }
+    @keyframes hero-in{
+      from{opacity:0;transform:translateY(12px) scale(.97);}
+      to{opacity:1;transform:translateY(0) scale(1);}
     }
     .hero-row{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap}
     .brand{display:flex;gap:14px;align-items:center;flex:1 1 320px}
 
-    /* === FIX badge KH không bị dẹp === */
+    /* === badge KH effect === */
     .badge{
       width:var(--badge);
       height:var(--badge);
       min-width:var(--badge);
-      flex:0 0 var(--badge);      /* không cho co lại trong flex */
-      aspect-ratio:1/1;           /* luôn vuông -> bo tròn thành hình tròn */
+      flex:0 0 var(--badge);
+      aspect-ratio:1/1;
       border-radius:50%;
       background:radial-gradient(circle at 35% 20%, #22c55e, #16a34a 45%, #0f172a 90%);
       border:1px solid rgba(34,197,94,.7);
       display:flex;align-items:center;justify-content:center;
-      box-shadow:0 14px 35px rgba(34,197,94,.38)
+      box-shadow:0 14px 35px rgba(34,197,94,.38);
+      position:relative;
+      overflow:hidden;
+      animation:badge-float 2.4s ease-in-out infinite;
+    }
+    .badge::after{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:radial-gradient(circle at 0 0,rgba(255,255,255,.25),transparent 55%);
+      mix-blend-mode:screen;
+      opacity:.35;
+      animation:badge-glow 3s ease-in-out infinite;
+    }
+    @keyframes badge-float{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-4px);}
+    }
+    @keyframes badge-glow{
+      0%,100%{opacity:.15;transform:translateX(-8px);}
+      50%{opacity:.4;transform:translateX(8px);}
     }
     .badge span{font-weight:800;letter-spacing:-.02em;line-height:1;color:#ecfdf5}
 
@@ -68,30 +104,46 @@
     .hero-tools{display:flex;flex-direction:column;gap:12px;min-width:260px;flex:1 1 280px}
     .search{position:relative;background:rgba(2,6,23,.35);border:1px solid var(--line);
       border-radius:14px;padding:10px 12px 10px 42px;outline:none;width:100%;
-      transition:border .18s ease, box-shadow .18s ease}
-    .search:focus{border-color:rgba(56,189,248,.55);box-shadow:0 0 0 3px rgba(56,189,248,.18)}
+      transition:border .18s ease, box-shadow .18s ease, transform .18s ease}
+    .search:focus{border-color:rgba(56,189,248,.55);box-shadow:0 0 0 3px rgba(56,189,248,.18);transform:translateY(-1px)}
     .search-icon{position:absolute;left:12px;top:9px;font-size:18px;color:#9ca3af}
     .chips{display:flex;flex-wrap:wrap;gap:8px}
     .chip{padding:7px 11px;border-radius:999px;border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-      display:inline-flex;align-items:center;gap:8px;color:#cbd5e1;transition:all .18s ease}
+      display:inline-flex;align-items:center;gap:8px;color:#cbd5e1;transition:all .18s ease;position:relative;overflow:hidden}
+    .chip::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 0 0,rgba(255,255,255,.12),transparent 55%);
+      opacity:0;
+      transform:translateX(-20%);
+      transition:opacity .18s ease, transform .18s ease;
+    }
     .chip i{font-size:12px;opacity:.9}
     .chip:hover{transform:translateY(-1px);box-shadow:var(--shadow-soft)}
+    .chip:hover::after{opacity:.8;transform:translateX(0);}
     .chip.active{background:linear-gradient(90deg, rgba(56,189,248,.18), rgba(34,197,94,.18));
       border-color:rgba(56,189,248,.45);color:#e2e8f0}
     .chip.clear{border-color:rgba(239,68,68,.35);color:#fecaca}
 
     .hero-foot{margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
     .pulse{display:inline-flex;gap:8px;align-items:center;font-size:12px;color:#86efac;background:rgba(34,197,94,.12);
-      padding:5px 9px;border:1px solid rgba(34,197,94,.35);border-radius:999px}
+      padding:5px 9px;border:1px solid rgba(34,197,94,.35);border-radius:999px;
+      animation:pulse-soft 1.8s ease-in-out infinite;
+    }
     .pulse i{color:#4ade80}
+    @keyframes pulse-soft{
+      0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.25);}
+      50%{box-shadow:0 0 0 6px rgba(34,197,94,.05);}
+    }
 
     /* ===== CATEGORIES ===== */
     .categories{display:flex;flex-wrap:wrap;gap:8px}
     .cat{padding:8px 12px;border-radius:999px;border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); color:#cbd5e1;
       display:inline-flex;align-items:center;gap:8px;transition:all .18s ease}
-    .cat:hover{transform:translateY(-1px)}
+    .cat:hover{transform:translateY(-1px) scale(1.01)}
     .cat.active{border-color:rgba(34,197,94,.45);
       background:linear-gradient(90deg, rgba(34,197,94,.18), rgba(56,189,248,.14));color:#e5e7eb}
 
@@ -104,14 +156,33 @@
       background:linear-gradient(var(--panel), var(--panel)) padding-box,
                  linear-gradient(135deg, rgba(56,189,248,.45), rgba(34,197,94,.45)) border-box;
       border:1px solid transparent;border-radius:var(--radius);box-shadow:var(--shadow-soft);
-      overflow:hidden;display:flex;flex-direction:column;transition:transform .16s ease, box-shadow .16s ease
+      overflow:hidden;display:flex;flex-direction:column;
+      transition:transform .18s ease, box-shadow .18s ease, opacity .25s ease;
+      opacity:0;
+      transform:translateY(10px) scale(.97);
     }
-    .script-card:hover{transform:translateY(-3px);box-shadow:0 22px 60px rgba(2,6,23,.55)}
+    .script-card.show{
+      opacity:1;
+      transform:translateY(0) scale(1);
+    }
+    .script-card:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 22px 60px rgba(2,6,23,.55)}
     .card-inner{padding:16px 16px 14px}
     .card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
     .tag-list{display:flex;gap:6px;flex-wrap:wrap}
     .tag{font-size:12px;padding:4px 8px;border-radius:999px;background:var(--chip);border:1px solid rgba(56,189,248,.25);color:#cfe9fb}
     .card-title{font-weight:700;font-size:18px;letter-spacing:-.01em;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+    .card-title a{position:relative;}
+    .card-title a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-2px;
+      width:0;
+      height:2px;
+      background:linear-gradient(90deg,#22c55e,#38bdf8);
+      transition:width .18s ease;
+    }
+    .card-title a:hover::after{width:100%;}
     .card-desc{color:#cbd5e1;font-size:14.5px;line-height:1.5;margin-bottom:12px}
     .meta{display:flex;align-items:center;gap:10px;color:#9aa4b2;font-size:13px;flex-wrap:wrap;margin-bottom:10px}
     .meta .dot{width:5px;height:5px;border-radius:50%;background:#94a3b8;opacity:.5}
@@ -122,8 +193,19 @@
       background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01))}
     .code-label{font-size:12px;color:#cbd5e1;display:flex;align-items:center;gap:8px}
     .code-actions{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(2,6,23,.35);color:#d1e2ff;display:inline-flex;align-items:center;gap:8px;font-size:13px;transition:all .18s ease}
+    .btn{padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(2,6,23,.35);color:#d1e2ff;display:inline-flex;align-items:center;gap:8px;font-size:13px;transition:all .18s ease;position:relative;overflow:hidden}
+    .btn::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 0 0,rgba(255,255,255,.18),transparent 55%);
+      opacity:0;
+      transform:translateX(-20%);
+      transition:opacity .18s ease, transform .18s ease;
+      pointer-events:none;
+    }
     .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-soft)}
+    .btn:hover::after{opacity:.9;transform:translateX(0);}
     .btn.copy{border-color:rgba(56,189,248,.45)} .btn.dl{border-color:rgba(34,197,94,.45)}
     .btn.link{border-color:rgba(180,180,200,.25);color:#e5e7eb} .btn.full{border-color:rgba(56,189,248,.5)}
     pre{margin:0;padding:14px;overflow:auto;font-size:13.6px;line-height:1.55}
@@ -139,8 +221,8 @@
       gap:8px 14px;
       color:#a1a1aa;
       font-size:13px;
-      flex-wrap:wrap;                 /* Cho phép xuống dòng khi hẹp */
-      justify-content:flex-start;     /* Tránh đẩy tràn 2 bên */
+      flex-wrap:wrap;
+      justify-content:flex-start;
     }
     .card-foot > span{
       display:inline-flex;
@@ -151,13 +233,17 @@
       overflow-wrap:anywhere;
     }
     @media (min-width:640px){
-      .card-foot{ justify-content:space-between; } /* Màn rộng thì canh 2 bên */
+      .card-foot{ justify-content:space-between; }
     }
 
     /* ===== MODAL FULL CODE ===== */
     .modal{position:fixed;inset:0;background:rgba(2,6,23,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:10000}
     .modal.show{display:flex}
-    .modal-box{width:min(1000px,92vw);max-height:86vh;background:var(--panel-2);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+    .modal-box{width:min(1000px,92vw);max-height:86vh;background:var(--panel-2);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;transform:translateY(10px) scale(.97);opacity:0;animation:modal-in .2s ease-out forwards;}
+    @keyframes modal-in{
+      from{opacity:0;transform:translateY(14px) scale(.94);}
+      to{opacity:1;transform:translateY(0) scale(1);}
+    }
     .modal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(148,163,184,.18)}
     .modal-title{font-weight:600}
     .modal-actions{display:flex;gap:8px}
@@ -284,6 +370,319 @@
       0%,100%{opacity:.18;transform:scale(1);}
       50%{opacity:.4;transform:scale(1.03);}
     }
+
+    /* ===== CHAT SUPPORT WIDGET ===== */
+    .chat-launcher{
+      position:fixed;
+      bottom:24px;
+      right:24px;
+      width:56px;
+      height:56px;
+      border-radius:999px;
+      background:linear-gradient(135deg,#22c55e,#38bdf8);
+      border:1px solid rgba(15,23,42,.9);
+      box-shadow:0 20px 45px rgba(0,0,0,.85);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      color:#ecfdf5;
+      z-index:9000;
+      animation:chat-pulse 2.4s ease-in-out infinite;
+    }
+    .chat-launcher span{
+      position:absolute;
+      right:64px;
+      white-space:nowrap;
+      font-size:12px;
+      background:rgba(15,23,42,.96);
+      border-radius:999px;
+      padding:4px 8px;
+      border:1px solid rgba(148,163,184,.5);
+      color:#e5e7eb;
+      box-shadow:0 10px 30px rgba(0,0,0,.7);
+      opacity:0;
+      transform:translateX(6px);
+      transition:opacity .18s ease, transform .18s ease;
+    }
+    .chat-launcher:hover span{
+      opacity:1;
+      transform:translateX(0);
+    }
+    @keyframes chat-pulse{
+      0%,100%{box-shadow:0 0 0 0 rgba(56,189,248,.45),0 20px 45px rgba(0,0,0,.9);}
+      50%{box-shadow:0 0 0 10px rgba(56,189,248,.0),0 24px 52px rgba(0,0,0,1);}
+    }
+
+    .chat-window{
+      position:fixed;
+      bottom:92px;
+      right:20px;
+      width:340px;
+      max-height:460px;
+      background:var(--panel-2);
+      border-radius:18px;
+      border:1px solid var(--line);
+      box-shadow:0 24px 80px rgba(0,0,0,.95);
+      display:flex;
+      flex-direction:column;
+      opacity:0;
+      transform:translateY(16px) scale(.97);
+      pointer-events:none;
+      transition:opacity .22s ease, transform .22s ease;
+      z-index:9000;
+      overflow:hidden;
+    }
+    .chat-window.open{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+    .chat-header{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(148,163,184,.18);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      background:linear-gradient(135deg, rgba(34,197,94,.3), rgba(15,23,42,.98));
+    }
+    .chat-header-main{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .chat-header-avatar{
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 0,#22c55e,#16a34a);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+      box-shadow:0 10px 26px rgba(22,163,74,.8);
+    }
+    .chat-header-text{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .chat-header-title{
+      font-size:13px;
+      font-weight:600;
+    }
+    .chat-header-sub{
+      font-size:11px;
+      color:#cbd5e1;
+    }
+    .chat-header-status{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:11px;
+      color:#bbf7d0;
+    }
+    .chat-header-status span{
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:#22c55e;
+      box-shadow:0 0 0 5px rgba(34,197,94,.2);
+    }
+
+    .chat-body{
+      display:flex;
+      flex-direction:column;
+      height:100%;
+      max-height:410px;
+      background:radial-gradient(circle at 0 0,rgba(56,189,248,.15),transparent 55%),
+                 radial-gradient(circle at 100% 100%,rgba(34,197,94,.18),transparent 55%),
+                 #020617;
+    }
+
+    .chat-login{
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      font-size:13px;
+    }
+    .chat-login section{
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.35);
+      padding:10px;
+      background:rgba(15,23,42,.94);
+    }
+    .chat-login h4{
+      font-size:13px;
+      margin-bottom:6px;
+    }
+    .chat-login p{
+      font-size:12px;
+      color:#9ca3af;
+      margin-bottom:6px;
+    }
+    .chat-login label{
+      display:block;
+      font-size:12px;
+      margin-bottom:4px;
+      color:#9ca3af;
+    }
+    .chat-login input[type="text"],
+    .chat-login input[type="password"]{
+      width:100%;
+      border-radius:8px;
+      border:1px solid rgba(148,163,184,.4);
+      background:#020617;
+      color:#e5e7eb;
+      padding:6px 8px;
+      font-size:13px;
+    }
+    .chat-login button{
+      margin-top:6px;
+      width:100%;
+      padding:7px 8px;
+      border-radius:999px;
+      border:1px solid rgba(56,189,248,.6);
+      background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#ecfeff;
+      font-size:13px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      box-shadow:0 12px 30px rgba(8,145,178,.7);
+    }
+
+    #adminPanel{
+      padding:6px 10px;
+      border-bottom:1px solid rgba(148,163,184,.2);
+      display:none;
+      align-items:center;
+      gap:6px;
+      font-size:12px;
+      background:rgba(15,23,42,.96);
+    }
+    #adminPanel span{
+      white-space:nowrap;
+      color:#e5e7eb;
+    }
+    #adminUserSelect{
+      flex:1;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.45);
+      background:#020617;
+      color:#e5e7eb;
+      padding:4px 8px;
+      font-size:12px;
+    }
+
+    .chat-room{
+      display:flex;
+      flex-direction:column;
+      height:100%;
+    }
+
+    .chat-messages{
+      padding:10px;
+      overflow-y:auto;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      font-size:13px;
+    }
+    .chat-message{
+      max-width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      animation:chat-message-in .18s ease-out;
+    }
+    .chat-message.me{
+      align-items:flex-end;
+    }
+    .chat-message.them{
+      align-items:flex-start;
+    }
+    .chat-message-meta{
+      font-size:11px;
+      color:#9ca3af;
+      max-width:100%;
+      word-break:break-word;
+    }
+    .chat-message-bubble{
+      padding:7px 9px;
+      border-radius:14px;
+      font-size:13px;
+      line-height:1.4;
+      max-width:100%;
+      word-break:break-word;
+    }
+    .chat-message.me .chat-message-bubble{
+      background:linear-gradient(135deg,#22c55e,#38bdf8);
+      color:#ecfdf5;
+      border-bottom-right-radius:4px;
+    }
+    .chat-message.them .chat-message-bubble{
+      background:rgba(15,23,42,.96);
+      border:1px solid rgba(148,163,184,.55);
+      color:#e5e7eb;
+      border-bottom-left-radius:4px;
+    }
+    @keyframes chat-message-in{
+      from{opacity:0;transform:translateY(4px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    .chat-input-row{
+      padding:8px 10px;
+      border-top:1px solid rgba(148,163,184,.2);
+      display:flex;
+      gap:6px;
+      align-items:flex-end;
+      background:linear-gradient(180deg,rgba(15,23,42,1),rgba(15,23,42,.96));
+    }
+    .chat-input{
+      flex:1;
+      resize:none;
+      max-height:80px;
+      min-height:32px;
+      border-radius:10px;
+      border:1px solid rgba(148,163,184,.35);
+      padding:6px 8px;
+      background:#020617;
+      color:#e5e7eb;
+      font-size:13px;
+    }
+    .chat-send-btn{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(34,197,94,.7);
+      background:linear-gradient(135deg,#22c55e,#16a34a);
+      color:#ecfdf5;
+      font-size:13px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      box-shadow:0 12px 30px rgba(22,163,74,.7);
+      flex-shrink:0;
+    }
+
+    @media (max-width:600px){
+      .chat-window{
+        right:12px;
+        width:calc(100% - 24px);
+      }
+      .chat-launcher{
+        right:16px;
+        bottom:16px;
+      }
+      .chat-launcher span{display:none;}
+    }
   </style>
 </head>
 <body>
@@ -332,14 +731,6 @@
 
     <!-- ===== LIST ===== -->
     <main class="grid" id="list">
-
-      <!-- 🔧 TEMPLATE: COPY KHỐI NÀY ĐỂ ĐĂNG BÀI MỚI
-        1) Đổi id="your-id" (không dấu, không cách) + data-cat="api|script|tut"
-        2) Sửa data-tags="api,script,python" (viết thường, cách nhau dấu phẩy)
-        3) Thay tiêu đề/mô tả/ngày/tác giả
-        4) Chọn ngôn ngữ: class <code> = language-javascript|python|bash|json...
-        5) Nút "Tải" đổi file bằng data-filename
-      -->
 
       <!-- ==== BÀI MẪU 1 ==== -->
       <article class="script-card" id="api-key-checker-nodejs" data-tags="api,auth,nodejs" data-date="2025-11-11" data-cat="script">
@@ -529,6 +920,69 @@ if __name__ == "__main__":
     </footer>
   </div>
 
+  <!-- Nút chat hỗ trợ -->
+  <button class="chat-launcher" id="chatLauncher" aria-label="Chat hỗ trợ KaceHub">
+    <i class="fa-solid fa-comments"></i>
+    <span>Chat hỗ trợ</span>
+  </button>
+
+  <!-- Cửa sổ chat -->
+  <div class="chat-window" id="chatWindow" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+    <div class="chat-header">
+      <div class="chat-header-main">
+        <div class="chat-header-avatar"><i class="fa-solid fa-headset"></i></div>
+        <div class="chat-header-text">
+          <div class="chat-header-title" id="chatTitle">Hỗ trợ KaceHub</div>
+          <div class="chat-header-sub" id="chatSubtitle">Nhập tên tài khoản để bắt đầu.</div>
+        </div>
+      </div>
+      <div class="chat-header-status">
+        <span></span>
+        Online
+      </div>
+    </div>
+    <div class="chat-body">
+      <div class="chat-login" id="chatLogin">
+        <section>
+          <h4><i class="fa-regular fa-user"></i> Khách / Người dùng</h4>
+          <p>Nhập tên tài khoản (nick, email, gì cũng được — chỉ để phân biệt).</p>
+          <form id="loginUserForm">
+            <label for="chatUsername">Tên tài khoản</label>
+            <input type="text" id="chatUsername" name="username" placeholder="Ví dụ: kace_user01" autocomplete="off" />
+            <button type="submit"><i class="fa-solid fa-arrow-right-to-bracket"></i> Bắt đầu chat</button>
+          </form>
+        </section>
+        <section>
+          <h4><i class="fa-solid fa-user-shield"></i> Admin</h4>
+          <p>Đăng nhập để xem và trả lời mọi câu hỏi.</p>
+          <form id="loginAdminForm">
+            <label for="adminUser">Tài khoản</label>
+            <input type="text" id="adminUser" name="adminUser" placeholder="admin" autocomplete="off" />
+            <label for="adminPass">Mật khẩu</label>
+            <input type="password" id="adminPass" name="adminPass" placeholder="admin123" />
+            <button type="submit"><i class="fa-solid fa-lock-open"></i> Đăng nhập admin</button>
+          </form>
+        </section>
+      </div>
+
+      <div id="chatRoom" class="chat-room hidden">
+        <div id="adminPanel">
+          <span><i class="fa-solid fa-users"></i> Trả lời khách:</span>
+          <select id="adminUserSelect">
+            <option value="__all__">Tất cả khách</option>
+          </select>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-row">
+          <textarea id="chatInput" class="chat-input" rows="1" placeholder="Nhập nội dung..."></textarea>
+          <button class="chat-send-btn" id="chatSend">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div class="toast" id="toast" aria-live="polite" aria-atomic="true" style="position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px"></div>
 
@@ -671,6 +1125,23 @@ if __name__ == "__main__":
       });
     })();
 
+    // ===== Scroll animation cho card =====
+    (function cardObserver(){
+      if(!('IntersectionObserver' in window)) {
+        cards.forEach(c=>c.classList.add('show'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {threshold:0.18});
+      cards.forEach(card=>observer.observe(card));
+    })();
+
     // ===== Card actions (copy / download / link / full) =====
     document.addEventListener('click', (e)=>{
       const copyBtn = e.target.closest('.btn.copy');
@@ -749,6 +1220,245 @@ if __name__ == "__main__":
       if(el){ setTimeout(()=> el.scrollIntoView({behavior:'smooth', block:'start'}), 120); }
     }
 
+    // ===== Chat Support Widget (localStorage) =====
+    const CHAT_STORAGE_KEY = 'kacehub_support_messages_v1';
+
+    const chatLauncher = document.getElementById('chatLauncher');
+    const chatWindow = document.getElementById('chatWindow');
+    const chatLogin = document.getElementById('chatLogin');
+    const chatRoom = document.getElementById('chatRoom');
+    const loginUserForm = document.getElementById('loginUserForm');
+    const loginAdminForm = document.getElementById('loginAdminForm');
+    const chatTitle = document.getElementById('chatTitle');
+    const chatSubtitle = document.getElementById('chatSubtitle');
+    const chatMessagesEl = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const chatSendBtn = document.getElementById('chatSend');
+    const adminPanel = document.getElementById('adminPanel');
+    const adminUserSelect = document.getElementById('adminUserSelect');
+
+    let currentUser = null; // {role: "user"|"admin", name: string}
+
+    function loadMessages(){
+      try{
+        const raw = localStorage.getItem(CHAT_STORAGE_KEY);
+        if(!raw) return [];
+        const data = JSON.parse(raw);
+        if(Array.isArray(data)) return data;
+        return [];
+      }catch(e){
+        console.warn('Cannot parse chat data', e);
+        return [];
+      }
+    }
+    function saveMessages(list){
+      try{
+        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(list));
+      }catch(e){
+        console.warn('Cannot save chat data', e);
+      }
+    }
+    function getDistinctUsers(messages){
+      const names = new Set();
+      messages.forEach(m=>{
+        if(m.fromRole === 'user' && m.fromName) names.add(m.fromName);
+      });
+      return Array.from(names);
+    }
+
+    function refreshAdminUserSelect(){
+      if(!adminUserSelect) return;
+      const messages = loadMessages();
+      const users = getDistinctUsers(messages);
+      const currentValue = adminUserSelect.value;
+      adminUserSelect.innerHTML = '<option value="__all__">Tất cả khách</option>';
+      if(users.length === 0){
+        const opt = document.createElement('option');
+        opt.value = '__none__';
+        opt.textContent = 'Chưa có khách nào';
+        adminUserSelect.appendChild(opt);
+      }else{
+        users.forEach(name=>{
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          adminUserSelect.appendChild(opt);
+        });
+      }
+      if(currentValue && Array.from(adminUserSelect.options).some(o=>o.value===currentValue)){
+        adminUserSelect.value = currentValue;
+      }
+    }
+
+    function renderMessages(){
+      if(!chatMessagesEl) return;
+      const messages = loadMessages();
+      chatMessagesEl.innerHTML = '';
+      if(!currentUser) return;
+
+      let viewMessages = [];
+      if(currentUser.role === 'admin'){
+        const filterVal = adminUserSelect ? adminUserSelect.value : '__all__';
+        if(filterVal && filterVal !== '__all__'){
+          viewMessages = messages.filter(m=> m.fromName === filterVal || m.toName === filterVal);
+        }else{
+          viewMessages = messages;
+        }
+      }else{
+        const name = currentUser.name;
+        viewMessages = messages.filter(m=> m.fromName === name || m.toName === name);
+      }
+
+      viewMessages.sort((a,b)=> new Date(a.ts || 0) - new Date(b.ts || 0));
+
+      viewMessages.forEach(m=>{
+        const item = document.createElement('div');
+        item.className = 'chat-message ' + (m.fromRole === currentUser.role ? 'me' : 'them');
+
+        const meta = document.createElement('div');
+        meta.className = 'chat-message-meta';
+
+        if(m.fromRole === 'admin'){
+          meta.textContent = 'KaceHub Support' + (m.toName ? ' → ' + m.toName : '');
+        }else{
+          if(currentUser.role === 'admin'){
+            meta.textContent = (m.fromName || 'Khách') + (m.toName === 'admin' ? ' → Admin' : (m.toName ? ' → ' + m.toName : ''));
+          }else{
+            meta.textContent = m.fromName === currentUser.name ? 'Bạn' : 'KaceHub Support';
+          }
+        }
+
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-message-bubble';
+        bubble.textContent = m.text || '';
+
+        item.appendChild(meta);
+        item.appendChild(bubble);
+        chatMessagesEl.appendChild(item);
+      });
+
+      chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+    }
+
+    function openChat(){
+      chatWindow.classList.add('open');
+    }
+
+    // mở / đóng panel chat
+    chatLauncher.addEventListener('click', ()=>{
+      const isOpen = chatWindow.classList.contains('open');
+      if(isOpen){
+        chatWindow.classList.remove('open');
+      }else{
+        openChat();
+      }
+    });
+
+    // user login
+    if(loginUserForm){
+      loginUserForm.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const name = (loginUserForm.username.value || '').trim();
+        if(!name){
+          toast('Vui lòng nhập tên tài khoản');
+          return;
+        }
+        if(name.toLowerCase() === 'admin'){
+          toast('Tên "admin" dành cho tài khoản quản trị. Hãy chọn tên khác.');
+          return;
+        }
+        currentUser = {role:'user', name};
+        chatLogin.classList.add('hidden');
+        chatRoom.classList.remove('hidden');
+        if(adminPanel) adminPanel.style.display = 'none';
+        chatTitle.textContent = 'Hỗ trợ KaceHub';
+        chatSubtitle.textContent = 'Đang chat với tư vấn viên — ' + name;
+        renderMessages();
+        openChat();
+      });
+    }
+
+    // admin login
+    if(loginAdminForm){
+      loginAdminForm.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const user = (loginAdminForm.adminUser.value || '').trim();
+        const pass = (loginAdminForm.adminPass.value || '').trim();
+        if(user !== 'admin' || pass !== 'admin123'){
+          toast('Sai tài khoản hoặc mật khẩu admin');
+          return;
+        }
+        currentUser = {role:'admin', name:'admin'};
+        chatLogin.classList.add('hidden');
+        chatRoom.classList.remove('hidden');
+        if(adminPanel) adminPanel.style.display = 'flex';
+        chatTitle.textContent = 'Admin hỗ trợ';
+        chatSubtitle.textContent = 'Đang xem và trả lời các câu hỏi của khách.';
+        refreshAdminUserSelect();
+        renderMessages();
+        openChat();
+      });
+    }
+
+    // admin đổi khách được focus
+    if(adminUserSelect){
+      adminUserSelect.addEventListener('change', ()=>{
+        if(currentUser && currentUser.role === 'admin'){
+          renderMessages();
+        }
+      });
+    }
+
+    // gửi tin nhắn
+    function sendChatMessage(){
+      if(!currentUser){
+        toast('Vui lòng đăng nhập trước khi chat');
+        return;
+      }
+      const text = (chatInput.value || '').trim();
+      if(!text) return;
+
+      const messages = loadMessages();
+      const msg = {
+        id: Date.now() + '-' + Math.random().toString(36).slice(2),
+        fromRole: currentUser.role,
+        fromName: currentUser.name,
+        toName: null,
+        text,
+        ts: new Date().toISOString()
+      };
+
+      if(currentUser.role === 'user'){
+        msg.toName = 'admin';
+      }else{
+        const target = adminUserSelect ? adminUserSelect.value : '__none__';
+        if(!target || target === '__none__'){
+          toast('Chọn một khách để trả lời');
+          return;
+        }
+        if(target === '__all__'){
+          // nếu chọn "Tất cả khách" thì coi như broadcast, không set cụ thể
+          msg.toName = null;
+        }else{
+          msg.toName = target;
+        }
+      }
+
+      messages.push(msg);
+      saveMessages(messages);
+      chatInput.value = '';
+      if(currentUser.role === 'admin') refreshAdminUserSelect();
+      renderMessages();
+    }
+
+    chatSendBtn.addEventListener('click', sendChatMessage);
+    chatInput.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' && !e.shiftKey){
+        e.preventDefault();
+        sendChatMessage();
+      }
+    });
+
     // ===== Dev Tools Shield logic (F12 / Ctrl+U / chuột phải) =====
     const devShield = document.getElementById('devShield');
     const devShieldClose = document.getElementById('devShieldClose');
@@ -797,5 +1507,3 @@ if __name__ == "__main__":
   </script>
 </body>
 </html>
-
-
